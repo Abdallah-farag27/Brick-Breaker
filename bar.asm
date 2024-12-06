@@ -3,11 +3,11 @@
 .stack 100h
 .data
     color       db 7h
-    startColumn dw 99 
-    endColumn   dw 219 
+    startColumn dw 120 
+    endColumn   dw 200
     startRow    dw 175 
     endRow      dw 185 
-    wide        dw 120
+    wide        dw 80
     height      dw 10
     barSpeed    dw 2
     tempVar1    dw ?
