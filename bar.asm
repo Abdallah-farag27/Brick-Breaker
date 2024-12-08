@@ -9,7 +9,7 @@
     endRow      dw 185 
     wide        dw 80
     height      dw 10
-    barSpeed    dw 2
+    barSpeed    dw 4
     tempVar1    dw ?
     tempVar2    dw ?
     dir         db ?
