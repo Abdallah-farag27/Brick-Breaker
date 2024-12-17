@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Assemble with TASM in DOSBox",
+            "type": "shell",
+            "command": "C:\\Program Files (x86)\\DOSBox-0.74-3\\DOSBox.exe",
+            "args": [
+                "-c",
+                "mount C D:\\Mostafa\\micro\\Brick-Breaker",
+                "-c",
+                "C:",
+                "-c",
+                "TASM.EXE *.asm",
+                "-c",
+                "LINK.EXE conv.obj;",
+                "-c",
+                "conv.exe",
+                "-c",
+                "exit"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": []
+        }
+    ]
+}
