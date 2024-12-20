@@ -22,6 +22,18 @@ ClearScreen macro
                 int 10h
 endm
 
+changeArrow macro x,y
+                moveCursor    12,25
+                DisplayString deleteArrow
+                moveCursor    14, 25
+                DisplayString deleteArrow
+                moveCursor    16, 25
+                DisplayString deleteArrow
+                moveCursor    x, y
+                DisplayString arrow
+                jmp           again
+endm
+
 ExitProgram MACRO
                 mov ah, 4Ch
                 int 21h
@@ -53,8 +65,7 @@ main proc far
              DisplayString StartConv
              moveCursor    16, 37
              DisplayString Exit
-             moveCursor    12, 25
-             DisplayString arrow
+             changeArrow   12, 25
 
     again:   mov           ah, 0               ; BIOS function to read key press
              int           16h                 ; Call BIOS interrupt
@@ -81,87 +92,33 @@ main proc far
              DisplayString StartConv
              ExitProgram
     p3:      DisplayString Exit
-                ExitProgram
+             ExitProgram
 
     dummy1:  jmp           up
 
-    down:    
-             cmp           currentOption, 2
+    down:    cmp           currentOption, 2
              jnz           downcont
              mov           currentOption, 0
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    12, 25
-             DisplayString arrow
-             jmp           again
+             changeArrow   12, 25
 
-
-    downcont:
-             inc           currentOption
+    downcont:inc           currentOption
              cmp           currentOption, 2
              jnz           c1
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString arrow
-             jmp           again
+             changeArrow   16, 25
 
-    c1:      
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString arrow
-             jmp           again
+    c1:      changeArrow   14, 25
 
     up:      cmp           currentOption, 0
              jnz           upcont
              mov           currentOption, 2
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString arrow
-             jmp           again
+             changeArrow   16, 25
 
-    upcont:  
-             dec           currentOption
+    upcont:  dec           currentOption
              cmp           currentOption, 0
              jnz           c2
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    12, 25
-             DisplayString arrow
-             jmp           again
+             changeArrow   12, 25
 
-    c2:      
-             moveCursor    12,25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString deleteArrow
-             moveCursor    16, 25
-             DisplayString deleteArrow
-             moveCursor    14, 25
-             DisplayString arrow
-             jmp           again
+    c2:      changeArrow   14, 25
 
 main endp
 end main
