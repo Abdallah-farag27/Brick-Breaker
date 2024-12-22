@@ -1,3 +1,7 @@
+extrn game:FAR
+extrn conv:FAR
+
+
 moveCursor macro row,col
                mov ah,02h
                mov dh,row
@@ -85,11 +89,11 @@ main proc far
              ClearScreen
              cmp           currentOption,0
              jnz           p2
-             DisplayString StartGame
+             call game
              ExitProgram
     p2:      cmp           currentOption,1
              jnz           p3
-             DisplayString StartConv
+             call conv
              ExitProgram
     p3:      DisplayString Exit
              ExitProgram
