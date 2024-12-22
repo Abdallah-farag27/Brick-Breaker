@@ -1,3 +1,5 @@
+public game
+
 extrn Bricks:FAR 
 extrn bDraw:far
 extrn barDraw:far
@@ -9,17 +11,18 @@ extrn barDraw:far
 
 .code
 
-main proc far
-    mov ax, @data
-    mov ds, ax
+game proc far
+    ; mov ax, @data
+    ; mov ds, ax
     mov ax,12h
     int 10h
     call Bricks
     call bDraw
     call barDraw
 lbl: jmp lbl
-    mov ah, 4Ch
-    int 21h
+    ; mov ah, 4Ch
+    ; int 21h
+    ret
 
-main endp
+game endp
 end

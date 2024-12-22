@@ -51,7 +51,7 @@ filedata1 = (
     filedata
     + r"""
 [serial]
-serial1=directserial realport:COM2
+serial1=directserial realport:COM1
     """
 )
 
@@ -59,7 +59,7 @@ filedata2 = (
     filedata
     + r"""
 [serial]
-serial1=directserial realport:COM3
+serial1=directserial realport:COM2
     """
 )
 
@@ -74,4 +74,4 @@ prog2 = ["C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-g
 
 subprocess.Popen(prog1)
 sleep(2)
-# subprocess.Popen(prog2)
+subprocess.Popen(prog2)
