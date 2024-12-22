@@ -1,5 +1,4 @@
-; Pong game in assembly language for DOS
-
+public Bdraw
 .model small
 
 .stack 100h
@@ -133,20 +132,17 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
 MOVE_BALL endp
 
 
-main proc far
+Bdraw proc far
 
-  mov ax,@data
-  mov ds,ax
+  ; mov ah, 00h	; set video mode
+  ; mov al, 12h ; 320x200 256 colors
+  ; int 10h
 
-  mov ah, 00h	; set video mode
-  mov al, 12h ; 320x200 256 colors
-  int 10h
-
-  mov ax, 0600h
-	mov bh, 00h  ; Attribute for clearing (white on black)
-	mov cx, 0000h ; Upper left corner (row 0, column 0)
-	mov dx, 184Fh ; Lower right corner (row 24, column 79)
-	int 10h
+  ; mov ax, 0600h
+	; mov bh, 00h  ; Attribute for clearing (white on black)
+	; mov cx, 0000h ; Upper left corner (row 0, column 0)
+	; mov dx, 184Fh ; Lower right corner (row 24, column 79)
+	; int 10h
 	
 	CHECK_TIME:
 
@@ -166,9 +162,7 @@ main proc far
 		call DRAW_BALL
 
 		jmp CHECK_TIME
+ret
 
-  mov ah, 4Ch
-  int 21h
-
-main endp
-end main
+Bdraw endp
+end

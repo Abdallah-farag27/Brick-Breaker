@@ -1,7 +1,8 @@
-.model huge
+public Bricks
+
+.model small
 
 .stack 100h
-
 
 .data
 
@@ -21,11 +22,11 @@
     currColor db 7
     temp dw ?
 
-    tmpWidth dw,?
-    tmpHeight dw,?
+    tmpWidth dw ?
+    tmpHeight dw ?
 .code
 
-IncrementWidthAndHeightAndColor proc far
+IncWHC proc far
     mov ax ,brickWidth
     add currWidth ,ax
     
@@ -39,7 +40,7 @@ IncrementWidthAndHeightAndColor proc far
 
 ENDPROC:
     ret 
-endp
+IncWHC endp
 
 ChooseColor proc far
     push cx
@@ -71,7 +72,7 @@ changeToBlack:
     mov currColor,al
     pop cx
     ret 
-endp
+ChooseColor endp
 
 DrawBrick proc far
     
@@ -103,26 +104,24 @@ DrawRow:
     jnz DrawColoumn
 
     ret
-endp
+DrawBrick endp
 
-main proc far
-    mov ax,@data
-    mov ds,ax
+Bricks proc far
 
-    mov ax,12h
-    int 10h
+
+    
 
 DrawBricks:
     call DrawBrick
-    call IncrementWidthAndHeightAndColor
+    call IncWHC
     mov ax,MAX_HEIGHT
     cmp ax, currHeight
     jz ENDsss
     jmp DrawBricks
 
 ENDsss:    
-    mov ah, 4Ch
-    int 21h
+  
+ret
+Bricks endp
 
-main endp
-end main
+end

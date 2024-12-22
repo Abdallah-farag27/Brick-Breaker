@@ -1,5 +1,6 @@
+public barDraw
 
-.model huge
+.model small
 .stack 100h
 .data
     color       db 7h
@@ -101,12 +102,11 @@ moveBar PROC FAR
         jmp draw
 moveBar ENDP
 
-main proc far
-    mov ax, @data
-    mov ds, ax
-    mov ah,0
-    mov al,12h
-    int 10h
+barDraw proc far
+   
+    ; mov ah,0
+    ; mov al,12h
+    ; int 10h
     call drawBar
    check: mov ah,1
     int 16h
@@ -130,7 +130,6 @@ main proc far
         call moveBar
         jmp check
     exit:
-        mov ah, 4Ch     	
-        int 21h
-main endp
-end main
+    ret
+barDraw endp
+end
