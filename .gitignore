@@ -1,4 +1,4 @@
 *.OBJ
 *.EXE
-*.conf
-*.py
+*.CONF
+*.PY

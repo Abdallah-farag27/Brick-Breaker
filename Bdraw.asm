@@ -1,4 +1,7 @@
-public Bdraw
+
+public DRAW_BALL
+public MOVE_BALL
+public Clear_BALL
 .model small
 
 .stack 100h
@@ -10,7 +13,6 @@ public Bdraw
 	WINDOW_HEIGHT equ 1E0h ; 200 pixels height of the window
 	reverse_direction db -1
 	
-	PREV_TIMESTEP db 0 ; previous time step, if it is different than the sysem times' one-hundredth, then we re-draw the ball
 	
 	BALL_X dw 140h
 	BALL_Y dw 0F0h
@@ -63,7 +65,7 @@ RESTART_BALL_POSITOIN proc near
 RESTART_BALL_POSITOIN endp
 
 
-CLEAR_SCREEN proc near
+Clear_BALL proc near
 	mov cx, BALL_X	; initial x position
 	mov dx, BALL_Y	; initial y position
 
@@ -88,7 +90,7 @@ CLEAR_SCREEN proc near
 	
 
 	ret
-CLEAR_SCREEN endp
+Clear_BALL endp
 
 
 MOVE_BALL proc near
@@ -132,37 +134,37 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
 MOVE_BALL endp
 
 
-Bdraw proc far
+; Bdraw proc far
 
-  ; mov ah, 00h	; set video mode
-  ; mov al, 12h ; 320x200 256 colors
-  ; int 10h
+;   ; mov ah, 00h	; set video mode
+;   ; mov al, 12h ; 320x200 256 colors
+;   ; int 10h
 
-  ; mov ax, 0600h
-	; mov bh, 00h  ; Attribute for clearing (white on black)
-	; mov cx, 0000h ; Upper left corner (row 0, column 0)
-	; mov dx, 184Fh ; Lower right corner (row 24, column 79)
-	; int 10h
+;   ; mov ax, 0600h
+; 	; mov bh, 00h  ; Attribute for clearing (white on black)
+; 	; mov cx, 0000h ; Upper left corner (row 0, column 0)
+; 	; mov dx, 184Fh ; Lower right corner (row 24, column 79)
+; 	; int 10h
 	
-	CHECK_TIME:
+; 	CHECK_TIME:
 
-		mov ah, 2ch ; get the system time
-		int 21h ; CH = hour, CL = minute, DH = second, DL = 1/100 second
+; 		mov ah, 2ch ; get the system time
+; 		int 21h ; CH = hour, CL = minute, DH = second, DL = 1/100 second
 
-		cmp dl, PREV_TIMESTEP
-		jz CHECK_TIME	; if the time hasn't changed, then we don't need to re-draw the ball
-		MOV PREV_TIMESTEP, DL ; update the previous time step
+; 		cmp dl, PREV_TIMESTEP
+; 		jz CHECK_TIME	; if the time hasn't changed, then we don't need to re-draw the ball
+; 		MOV PREV_TIMESTEP, DL ; update the previous time step
 
-		; Clear the screen
-		call CLEAR_SCREEN
+; 		; Clear the screen
+; 		call Clear_BALL
 
-		call MOVE_BALL
+; 		call MOVE_BALL
 
 
-		call DRAW_BALL
+; 		call DRAW_BALL
 
-		jmp CHECK_TIME
-ret
+; 		jmp CHECK_TIME
+; ret
 
-Bdraw endp
+; Bdraw endp
 end
