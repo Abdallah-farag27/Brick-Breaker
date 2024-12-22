@@ -1,4 +1,6 @@
-public barDraw
+public moveBar
+public dir
+public drawBar
 
 .model small
 .stack 100h
@@ -102,34 +104,33 @@ moveBar PROC FAR
         jmp draw
 moveBar ENDP
 
-barDraw proc far
-   
-    ; mov ah,0
-    ; mov al,12h
-    ; int 10h
-    call drawBar
-   check: mov ah,1
-    int 16h
-    jz next
-    mov ah,0
-    int 16h
-    cmp ah, 4Bh
-    jz movebarleft
-    cmp ah, 4Dh
-    jz movebarright
+; barDraw proc far
+;     ; mov ah,0
+;     ; mov al,12h
+;     ; int 10h
+;     call drawBar
+;    check: mov ah,1
+;     int 16h
+;     jz next
+;     mov ah,0
+;     int 16h
+;     cmp ah, 4Bh
+;     jz movebarleft
+;     cmp ah, 4Dh
+;     jz movebarright
 
-    next:
-    ;rest of code
-        jmp check
-    movebarright:
-        mov dir, 1
-        call moveBar
-        jmp check
-    movebarleft:
-        mov dir, 0
-        call moveBar
-        jmp check
-    exit:
-    ret
-barDraw endp
+;     next:
+;     ;rest of code
+;         jmp check
+;     movebarright:
+;         mov dir, 1
+;         call moveBar
+;         jmp check
+;     movebarleft:
+;         mov dir, 0
+;         call moveBar
+;         jmp check
+;     exit:
+;     ret
+; barDraw endp
 end
