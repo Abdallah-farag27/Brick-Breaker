@@ -1,3 +1,5 @@
+public conv
+
 .MODEL SMALL
 .STACK 64
 .DATA
@@ -60,10 +62,9 @@ setCursor MACRO x, y
                                int         10h
 ENDM
 
-    ; Main program starts here
-main proc far
-                     mov         ax, @data
-                     mov         ds, ax
+    ; conv program starts here
+conv proc far
+    
 
     ; Set video mode to 80x25 text mode
                      mov         ah, 0
@@ -283,8 +284,7 @@ start proc
 start endp
 
     exit:            
-                     mov         ah, 4Ch
-                     int         21h
-main endp
+                    ret
+conv endp
 
-end main
+end
