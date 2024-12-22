@@ -1,133 +1,124 @@
-; .model small
-; .stack 100h
-; .data
-;     menuOptions db 'Start Game', '$'
-;                 db 'Options    ', '$'
-;                 db 'Exit       ', '$'
+moveCursor macro row,col
+               mov ah,02h
+               mov dh,row
+               mov dl,col
+               mov bh,0
+               int 10h
+endm
 
-;     chooselabel db '>','$'
-;     startGameMsg db 'Starting the Game...$'   ; Message for Start Game
-;     optionsMsg db 'Options Menu...$'          ; Message for Options
+DisplayString MACRO STR
+                  lea dx,STR
+                  mov ah,09h
+                  int 21h
+ENDM
 
-;     totalOptions db 3   ; Total number of options
-;     currentOption db 0  ; Currently selected option (0-indexed)
-;     arrowUp db 72       ; Arrow Up key code
-;     arrowDown db 80     ; Arrow Down key code
-;     enterKey db 13      ; Enter key code
+ClearScreen macro
+                mov ah,06h
+                mov al,0
+                mov bh,07h
+                mov cx,0
+                mov dh,25
+                mov dl,80
+                int 10h
+endm
 
-; .code
-; main proc
-;     mov ax, @data
-;     mov ds, ax
+changeArrow macro x,y
+                moveCursor    12,25
+                DisplayString deleteArrow
+                moveCursor    14, 25
+                DisplayString deleteArrow
+                moveCursor    16, 25
+                DisplayString deleteArrow
+                moveCursor    x, y
+                DisplayString arrow
+                jmp           again
+endm
 
-;     ; Set video mode to text mode
-;     mov ah, 00h
-;     mov al, 03h
-;     int 10h
+ExitProgram MACRO
+                mov ah, 4Ch
+                int 21h
+ENDM
 
-;     ; Main menu display loop
-; menu_loop:
-;     call displayMenu    ; Show menu options
-;     call getKey         ; Get user input
-;     cmp ah, arrowUp     ; Check if Arrow Up
-;     je moveUp
-;     cmp ah, arrowDown   ; Check if Arrow Down
-;     je moveDown
-;     cmp al, enterKey    ; Check if Enter key
-;     je executeOption
-;     jmp menu_loop       ; Repeat
+.model small
+.stack 100h
+.data
+    GameName      db 'Brick Breaker Game','$'
+    StartGame     db 'Start Game','$'
+    StartConv     db 'Start Conversation','$'
+    Exit          db 'Exit','$'
+    arrow         db 10h,'$'
+    deleteArrow   db ' ','$'
+    currentOption db 0
+.code
 
-; moveUp:
-;     cmp currentOption, 0
-;     je menu_loop        ; If already at the top, do nothing
-;     dec currentOption   ; Move up in the menu
-;     jmp menu_loop
+main proc far
+             mov           ax, @data
+             mov           ds, ax
 
-; moveDown:
-;     cmp currentOption, 2
-;     je menu_loop        ; If already at the bottom, do nothing
-;     inc currentOption   ; Move down in the menu
-;     jmp menu_loop
+             ClearScreen
 
-; executeOption:
-;     ; Based on the selected option, perform actions
-;     mov al, currentOption  ; No need to zero-extend, it's already a byte
-;     cmp al, 0
-;     je startGame        ; If "Start Game" selected
-;     cmp al, 1
-;     je showOptions      ; If "Options" selected
-;     cmp al, 2
-;     je exitProgram      ; If "Exit" selected
-;     jmp menu_loop
+             moveCursor    7, 30
+             DisplayString GameName
+             moveCursor    12, 34
+             DisplayString StartGame
+             moveCursor    14, 30
+             DisplayString StartConv
+             moveCursor    16, 37
+             DisplayString Exit
+             changeArrow   12, 25
 
-; startGame:
-;     ; Add your game start logic here
-;     mov ah, 09h
-;     lea dx, startGameMsg
-;     int 21h
-;     jmp endProgram
+    again:   mov           ah, 0               ; BIOS function to read key press
+             int           16h                 ; Call BIOS interrupt
 
-; showOptions:
-;     ; Add your options logic here
-;     mov ah, 09h
-;     lea dx, optionsMsg
-;     int 21h
-;     jmp menu_loop
+             cmp           ah, 50h             ; Check if AH contains the scan code for the down arrow
+             jz            down                ; Jump to down arrow handling
 
-; exitProgram:
-;     jmp endProgram
+             cmp           ah, 48h             ; Check if AH contains the scan code for the up arrow
+             jz            dummy1              ; Jump to up arrow handling
 
-; ; Subroutine to display menu options
-; displayMenu proc
-;     mov ah, 02h         ; Set cursor position function
-;     mov dh, 5           ; Row position
-;     mov bh, 0           ; Page number
-;     mov dl, 10          ; Column position
-;     lea si, menuOptions
-;     mov cx, 0           ; Option index
+             cmp           al, 0Dh             ; Check for Enter key (scan code for Enter)
+             jz            check               ; Exit if Enter is pressed
 
-; display_loop:
-;     ; Set cursor position
-;     int 10h
+             jmp           again               ; Loop back if no recognized key is pressed
 
-;     ; Print the current option
-;     mov ah, 09h
-;     lea dx, [si]
-;     int 21h
+    check:   
+             ClearScreen
+             cmp           currentOption,0
+             jnz           p2
+             DisplayString StartGame
+             ExitProgram
+    p2:      cmp           currentOption,1
+             jnz           p3
+             DisplayString StartConv
+             ExitProgram
+    p3:      DisplayString Exit
+             ExitProgram
 
-;     ; Highlight the currently selected option
-;     mov al, currentOption
-;     cmp cl, al
-;     jne normalText
-;     call highlightText
+    dummy1:  jmp           up
 
-; normalText:
-;     add si, 12          ; Move to the next menu string
-;     inc cx
-;     cmp cl, totalOptions
-;     jne display_loop
+    down:    cmp           currentOption, 2
+             jnz           downcont
+             mov           currentOption, 0
+             changeArrow   12, 25
 
-;     ret
-; displayMenu endp
+    downcont:inc           currentOption
+             cmp           currentOption, 2
+             jnz           c1
+             changeArrow   16, 25
 
-; ; Subroutine to get a key press
-; getKey proc
-;     mov ah, 00h
-;     int 16h
-;     ret
-; getKey endp
+    c1:      changeArrow   14, 25
 
-; ; Subroutine to highlight text (simplified for example)
-; highlightText proc
-;     ; Highlight text, change text color (example)
-;     ret
-; highlightText endp
+    up:      cmp           currentOption, 0
+             jnz           upcont
+             mov           currentOption, 2
+             changeArrow   16, 25
 
-; endProgram:
-;     ; Exit to DOS
-;     mov ah, 4Ch
-;     int 21h
+    upcont:  dec           currentOption
+             cmp           currentOption, 0
+             jnz           c2
+             changeArrow   12, 25
 
-; main endp
-; end main
+    c2:      changeArrow   14, 25
 
+main endp
+end main
