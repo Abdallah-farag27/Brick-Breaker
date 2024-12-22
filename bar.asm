@@ -3,13 +3,13 @@
 .stack 100h
 .data
     color       db 7h
-    startColumn dw 120 
-    endColumn   dw 200
-    startRow    dw 175 
-    endRow      dw 185 
-    wide        dw 80
-    height      dw 10
-    barSpeed    dw 4
+    startColumn dw 240 
+    endColumn   dw 400
+    startRow    dw 400 
+    endRow      dw 420 
+    wide        dw 160
+    height      dw 20
+    barSpeed    dw 20
     tempVar1    dw ?
     tempVar2    dw ?
     dir         db ?
@@ -31,7 +31,7 @@ drawBar PROC FAR
         cmp dx, endRow
         jnz drawVertical
     ret
-ENDP
+drawBar ENDP
 
 moveBar PROC FAR
     cmp dir,0
@@ -48,7 +48,7 @@ moveBar PROC FAR
         mov dx, startRow
         jmp draw
     rightDraw:
-        cmp endColumn,318
+        cmp endColumn, 638
         ja endMove
         mov cx, endColumn
         mov tempVar1,cx
@@ -99,13 +99,13 @@ moveBar PROC FAR
         mov dx, startRow
         mov color,0
         jmp draw
-ENDP
+moveBar ENDP
 
 main proc far
     mov ax, @data
     mov ds, ax
     mov ah,0
-    mov al,4
+    mov al,12h
     int 10h
     call drawBar
    check: mov ah,1
