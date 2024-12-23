@@ -8,17 +8,18 @@ public Bricks
 
 	WINDOW_WIDTH equ 640  ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
-    MAX_HEIGHT equ 100
+    MAX_HEIGHT equ 120
 	
 	currWidth Dw 0
 	currHeight Dw 0
 
-    brickWidth dw 80
-    brickHeight dw 20
+    brickWidth dw 128
+    brickHeight dw 30
 
     colorBlack db 16
     colorGray db 7
 
+    color db 0
     currColor db 7
     temp dw ?
 
