@@ -1,7 +1,10 @@
 public moveBar
 public dir
 public drawBar
-
+public startColumn
+public startRow
+public endColumn
+public endRow
 .model small
 .stack 100h
 .data
@@ -40,7 +43,7 @@ moveBar PROC FAR
     cmp dir,0
     jnz rightDraw
     leftDraw:
-        cmp startColumn,2
+        cmp startColumn,1
         jb endMove
         mov cx, startColumn
         mov tempVar1,cx
@@ -51,7 +54,7 @@ moveBar PROC FAR
         mov dx, startRow
         jmp draw
     rightDraw:
-        cmp endColumn, 638
+        cmp endColumn, 639
         ja endMove
         mov cx, endColumn
         mov tempVar1,cx

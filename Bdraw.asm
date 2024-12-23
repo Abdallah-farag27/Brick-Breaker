@@ -2,6 +2,12 @@
 public DRAW_BALL
 public MOVE_BALL
 public Clear_BALL
+
+extrn startColumn:word
+extrn startRow:word	
+extrn endColumn:word
+extrn endRow:word
+
 .model small
 
 .stack 100h
@@ -17,8 +23,8 @@ public Clear_BALL
 	BALL_X dw 140h
 	BALL_Y dw 0F0h
 	BALL_SIZE dw 08h	; 4x4 pixels
-	BALL_VELOCITY_X dw 05h
-	BALL_VELOCITY_Y dw 02h
+	BALL_VELOCITY_X dw 8h
+	BALL_VELOCITY_Y dw 5h
 	BALL_ORIGINAL_X dw 140h
  	BALL_ORIGINAL_Y dw 0F0h
 
@@ -117,6 +123,21 @@ MOVE_BALL proc near
     cmp BALL_Y, ax							; BALL_Y > window_height - ball size => ball collided with bottom wall
     jg RESTART_BALL_POSITOIN
 
+    mov ax,startRow
+    cmp BALL_Y, ax
+    jle done
+	mov ax, endRow
+	cmp BALL_Y, ax
+	jge done 
+    mov ax, startColumn
+    cmp BALL_X, ax
+    jle done
+    mov ax, endColumn
+    cmp BALL_X, ax
+    jge done
+    jmp MULTIPLY_VELOCITY_Y_BY_NEG
+
+done:
     ret
 
 MULTIPLY_VELOCITY_X_BY_NEG:
@@ -130,6 +151,15 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
 		mov ax, BALL_VELOCITY_Y
 		add BALL_Y, ax
     ret
+
+; MULTIPLY_VELOCITY_XY:
+; 	NEG BALL_VELOCITY_X
+; 		mov ax, BALL_VELOCITY_X
+; 		add BALL_X, ax
+; 	NEG BALL_VELOCITY_Y
+; 		mov ax, BALL_VELOCITY_Y
+; 		add BALL_Y, ax
+; 	ret
 
 MOVE_BALL endp
 
