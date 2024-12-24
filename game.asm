@@ -12,7 +12,7 @@ extrn dir:byte
 .stack 100h
 .data
 
-PREV_TIMESTEP db 0 ; previous time step, if it is different than the sysem times' one-hundredth, then we re-draw the ball
+PREV_TIMESTEP db 0
 
 .code
 
@@ -28,16 +28,15 @@ CHECK_TIME:
 		int 21h ; CH = hour, CL = minute, DH = second, DL = 1/100 second
 
 		cmp dl, PREV_TIMESTEP
-		jz CHECK_TIME	; if the time hasn't changed, then we don't need to re-draw the ball
+		jz CHECK_TIME	
 		MOV PREV_TIMESTEP, DL ; update the previous time step
 
 		; Clear the screen
 		call Clear_BALL
-
 		call MOVE_BALL
-
-
 		call DRAW_BALL
+        
+        
         call drawBar
         mov ah,1
         int 16h

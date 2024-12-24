@@ -8,7 +8,7 @@ public endRow
 .model small
 .stack 100h
 .data
-    color       db 7h
+    color       db 3h
     startColumn dw 240 
     endColumn   dw 400
     startRow    dw 400 
@@ -65,7 +65,7 @@ moveBar PROC FAR
         mov dx, startRow
         jmp draw
     endMove:
-        mov color,7h
+        mov color,3h
         ret
     draw:
         mov al,color
