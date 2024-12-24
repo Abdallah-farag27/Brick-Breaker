@@ -270,13 +270,13 @@ cont:	mov ax,BRICK_IX
 	mov BRICK_Y_END,ax
 	call eraseBrick
 	mov ax, BALL_X
-	add ax,3
+	add ax,5
 	mov cx, 64
 	div cx
 	cmp dx,0
 	jz MULTIPLY_VELOCITY_X
 	mov ax, BALL_X
-	sub ax,3
+	sub ax,5
 	mov cx, 64
 	div cx
 	cmp dx,0
