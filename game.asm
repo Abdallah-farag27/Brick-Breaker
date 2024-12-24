@@ -8,36 +8,10 @@ extrn moveBar:far
 extrn drawBar:far
 extrn dir:byte
 extrn rdir:byte
-; extrn WINDOW_WIDTH:word
-; extrn START_X:word
-; extrn currWidth:word
-; extrn startColumn:word
-; extrn endColumn:word
 extrn Brlr:byte
 extrn Bllr:byte
 extrn Barlr:byte
 
-initPort MACRO
-    ;Set Divisor Latch Access Bit
-    MOV DX, 3FBh 				; Line Control Register
-    MOV AL, 10000000b			;Set Divisor Latch Access Bit
-    OUT DX, AL					;Out it
-	
-    ;Set LSB byte of the Baud Rate Divisor Latch register.
-    MOV DX, 3F8h			
-    MOV AL, 0Ch			
-    OUT DX, AL
-
-    ;Set MSB byte of the Baud Rate Divisor Latch register.
-    MOV DX, 3F9h
-    MOV AL, 00h
-    OUT DX, AL
-
-    ;Set port configuration
-    MOV DX, 3FBh
-    MOV AL, 00011011b
-    OUT DX, AL
-ENDM
 
 .model small
 
@@ -63,7 +37,6 @@ ret
 splitScreen endp
 
 game proc far
-    initPort
     mov ax,12h
     int 10h
     mov Brlr,'1'
@@ -108,36 +81,35 @@ left:
         jz movebarright
 
         next:
-        ;rest of code
             jmp CHECK_TIME
         movebarright:
             mov dir, 1
             mov Barlr,'1'
-            mov dx,3FDH 			;Line Status Register
-            in al , dx 				;Read Line Status
+            mov dx,3FDH 			
+            in al , dx 				
             AND al , 00100000b
             jz right 
-            mov dx, 3F8H			;Transmit data register
-            mov al, 'r'       	;put the data into al
+            mov dx, 3F8H		
+            mov al, 'r'   
             out dx, al
             call moveBar
             jmp CHECK_TIME
         movebarleft:
             mov dir, 0
             mov Barlr,'1'
-            mov dx,3FDH 			;Line Status Register
-            in al , dx 				;Read Line Status
+            mov dx,3FDH 			
+            in al , dx 			
             AND al , 00100000b
             jz right 
-            mov dx, 3F8H			;Transmit data register
-            mov al, 'l'       	;put the data into al
+            mov dx, 3F8H			
+            mov al, 'l'     
             out dx, al
             call moveBar
             jmp CHECK_TIME
 right:
-    MOV DX, 3FDh		;line status register
-	in AL, DX			;take from the line register into AL
-	AND al, 1			;check if its not empty
+    MOV DX, 3FDh	
+	in AL, DX		
+	AND al, 1
 	JZ next	
     MOV DX, 03F8h
 	in al, dx

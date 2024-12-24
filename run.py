@@ -73,5 +73,5 @@ prog1 = ["E:\MicroAssembly\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generat
 prog2 = ["E:\MicroAssembly\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generated2.conf"]
 
 subprocess.Popen(prog1)
-sleep(5)
+sleep(3)
 subprocess.Popen(prog2)
