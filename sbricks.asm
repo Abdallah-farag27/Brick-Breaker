@@ -1,4 +1,4 @@
-public Bricks
+public sBricks
 
 .model small
 
@@ -6,15 +6,15 @@ public Bricks
 
 .data
 
-	WINDOW_WIDTH equ 320  ; 640 pixels width of the window
+	WINDOW_WIDTH equ 640  ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
-    MAX_HEIGHT equ 60
+    MAX_HEIGHT equ 120
 	
 	currWidth Dw 0
 	currHeight Dw 0
 
-    brickWidth dw 64
-    brickHeight dw 15
+    brickWidth dw 128
+    brickHeight dw 30
 
     colorBlack db 16
     colorGray db 5
@@ -107,22 +107,22 @@ DrawRow:
     ret
 DrawBrick endp
 
-Bricks proc far
+sBricks proc far
 
 
     
 
-DrawBricks:
+DrawsBricks:
     call DrawBrick
     call IncWHC
     mov ax,MAX_HEIGHT
     cmp ax, currHeight
     jz ENDsss
-    jmp DrawBricks
+    jmp DrawsBricks
 
 ENDsss:    
   
 ret
-Bricks endp
+sBricks endp
 
 end

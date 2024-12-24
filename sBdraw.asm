@@ -1,12 +1,12 @@
 
-public DRAW_BALL
-public MOVE_BALL
-public Clear_BALL
+public sDRAW_BALL
+public sMOVE_BALL
+public sClear_BALL
 
-extrn startColumn:word
-extrn startRow:word	
-extrn endColumn:word
-extrn endRow:word
+extrn sstartColumn:word
+extrn sstartRow:word	
+extrn sendColumn:word
+extrn sendRow:word
 
 .model small
 
@@ -15,30 +15,30 @@ extrn endRow:word
 
 .data
 
-	WINDOW_WIDTH equ 140h ; 320 pixels width of the window
+	WINDOW_WIDTH equ 280h ; 320 pixels width of the window
 	WINDOW_HEIGHT equ 1E0h ; 200 pixels height of the window
 	reverse_direction db -1
 
 
-	BALL_X dw 0A0h
+	BALL_X dw 140h
 	BALL_Y dw 0F0h
-	BALL_SIZE dw 06h	; 4x4 pixels
+	BALL_SIZE dw 08h	; 4x4 pixels
 	BALL_VELOCITY_X dw 9h
 	BALL_VELOCITY_Y dw 6h
-	BALL_ORIGINAL_X dw 0A0h
+	BALL_ORIGINAL_X dw 140h
  	BALL_ORIGINAL_Y dw 0F0h
 
-  BRICK_X_START dw ?
-  BRICK_Y_START dw ?
-  BRICK_X_END dw ?
-  BRICK_Y_END dw ?
+    BRICK_X_START dw ?
+    BRICK_Y_START dw ?
+    BRICK_X_END dw ?
+    BRICK_Y_END dw ?
 	BRICK_IX dw ?
 	BRICK_IY dw ?
 	PREV_TIMESTEP db 0 
 .code
 
 
-DRAW_BALL proc near
+sDRAW_BALL proc near
 
 	mov cx, BALL_X	; initial x position
 	mov dx, BALL_Y	; initial y position
@@ -63,7 +63,7 @@ DRAW_BALL proc near
 		jl rowLoop
 	ret
 
-DRAW_BALL endp
+sDRAW_BALL endp
 
 RESTART_BALL_POSITION proc far
 
@@ -78,7 +78,7 @@ RESTART_BALL_POSITION proc far
 RESTART_BALL_POSITION endp
 
 
-Clear_BALL proc near
+sClear_BALL proc near
 	mov cx, BALL_X	; initial x position
 	mov dx, BALL_Y	; initial y position
 
@@ -103,7 +103,7 @@ Clear_BALL proc near
 	
 
 	ret
-Clear_BALL endp
+sClear_BALL endp
 
 eraseBrick PROC FAR
     mov cx,BRICK_X_START 
@@ -134,39 +134,39 @@ CHECK_Brick_COL proc far
 
 
 	mov ax,BAll_X
-	mov cl,64
+	mov cl,128
 	div cl
 	mov ah,0
 	mov BRICK_IX,ax
 
 	mov ax,BAll_Y
-	mov cl,15
+	mov cl,30
 	div cl
 	mov ah,0
 	mov BRICK_IY,ax
 
 	mov ax,BRICK_IX
-	mov cl,64
+	mov cl,128
 	mul cl
 	mov BRICK_X_START,ax
-	add ax, 64
+	add ax, 128
 	mov BRICK_X_END,ax
 	mov ax,BRICK_IY
-	mov cl,15
+	mov cl,30
 	mul cl
 	mov BRICK_Y_START,ax
-	add ax,15
+	add ax,30
 	mov BRICK_Y_END,ax
 	call eraseBrick
 	mov ax, BALL_X
-	add ax,6
-	mov cx, 64
+	add ax,8
+	mov cx, 128
 	div cx
 	cmp dx,0
 	jz MULTIPLY_VELOCITY_X
 	mov ax, BALL_X
-	sub ax,6
-	mov cx, 64
+	sub ax,8
+	mov cx, 128
 	div cx
 	cmp dx,0
 	jz MULTIPLY_VELOCITY_X
@@ -187,7 +187,7 @@ MULTIPLY_VELOCITY_X:
 
 CHECK_Brick_COL endp
 
-MOVE_BALL proc far
+sMOVE_BALL proc far
 
     mov ax, BALL_X
     add ax, BALL_VELOCITY_X         				; move the ball horizontally
@@ -212,16 +212,16 @@ MOVE_BALL proc far
     jg lpl 
 	
     call CHECK_Brick_COL
-    mov ax,startRow
+    mov ax,sstartRow
     cmp BALL_Y, ax
     jle done
-		mov ax, endRow
-		cmp BALL_Y, ax
-		jge done 
-    mov ax, startColumn
+	mov ax, sendRow
+	cmp BALL_Y, ax
+	jge done 
+    mov ax, sstartColumn
     cmp BALL_X, ax
     jle done
-    mov ax, endColumn
+    mov ax, sendColumn
     cmp BALL_X, ax
     jge done
     jmp MULTIPLY_VELOCITY_Y_BY_NEG
@@ -242,5 +242,5 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
 		add BALL_Y, ax
     ret
 
-MOVE_BALL endp
+sMOVE_BALL endp
 end
