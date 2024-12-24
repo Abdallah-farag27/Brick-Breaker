@@ -1,6 +1,6 @@
+
+Public quit
 extrn single:FAR
-extrn conv:FAR
-extrn game:FAR
 
 moveCursor macro row,col
                mov ah,02h
@@ -27,13 +27,9 @@ ClearScreen macro
 endm
 
 changeArrow macro x,y
-                moveCursor    10,25
-                DisplayString deleteArrow
                 moveCursor    12, 25
                 DisplayString deleteArrow
                 moveCursor    14, 25
-                DisplayString deleteArrow
-                moveCursor    16, 25
                 DisplayString deleteArrow
                 moveCursor    x, y
                 DisplayString arrow
@@ -50,35 +46,47 @@ ENDM
 .model small
 .stack 100h
 .data
-    GameName      db 'Brick Breaker Game','$'
-    SinglePlayer     db 'Single Player Mode','$'
-    TwoPlayers     db 'Two Players Mode','$'
-    StartConv     db 'Start Conversation','$'
+    SorM db '1'
+    WorL db '0'
+    Win db'You Win!','$'
+    Cong      db 'Congratulation','$'
+    Lose db'You Lose!','$'
+    GameOver      db 'Game Over','$'
+    TryAgain     db 'Try Again','$'
     Exit          db 'Exit The Game','$'
     arrow         db 10h,'$'
     deleteArrow   db ' ','$'
     currentOption db 0
 .code
 
-main proc far
-             mov           ax, @data
-             mov           ds, ax
-              mov ax,3h
-                int 10h
+quit proc far
+            ;  mov           ax, @data
+            ;  mov           ds, ax
 
+ mov ax,3h
+    int 10h
              ClearScreen
 
-             moveCursor    6, 30
-             DisplayString GameName
-             moveCursor    10, 30
-             DisplayString SinglePlayer
-             moveCursor    12, 31
-             DisplayString TwoPlayers
-             moveCursor    14, 30
-             DisplayString StartConv
-             moveCursor    16, 32
-             DisplayString Exit
-             changeArrow   10, 25
+
+             moveCursor    6, 34
+             cmp WorL, '1'
+             jnz  lbl1
+             DisplayString Win
+             jmp cont1
+    lbl1:  DisplayString Lose
+    cont1:    cmp WorL, '1'
+             jnz  lbl2
+             moveCursor    8, 32
+             DisplayString cong
+             jmp cont2
+    lbl2:
+            moveCursor    8, 34
+             DisplayString GameOver
+    cont2:         moveCursor    12, 34
+             DisplayString TryAgain
+             moveCursor    14, 32
+             DisplayString exit
+             changeArrow   12, 25
 
     again:   mov           ah, 0               ; BIOS function to read key press
              int           16h                 ; Call BIOS interrupt
@@ -98,49 +106,28 @@ main proc far
              ClearScreen
              cmp           currentOption,0
              jnz           p2
+             cmp SorM, '1'
+             jnz multi
              call single
-             ExitProgram
-    p2:      cmp           currentOption,1
-             jnz           p3
-             call game
-             ExitProgram
-    p3:      cmp           currentOption,2
-             jnz           p4
-             call conv
-    p4:      ExitProgram
+             multi:
+             call single
 
-dummy1:jmp up
-
-    down:    cmp           currentOption, 3
+      p2:        ExitProgram
+dummy1:  jmp            up
+    down:    cmp           currentOption, 1
              jnz           downcont
              mov           currentOption, 0
-             changeArrow   10, 25
-    downcont:inc           currentOption
-             cmp           currentOption, 1
-             jnz           drow2
              changeArrow   12, 25
-
-    drow2:      cmp           currentOption, 2
-             jnz           drow3
+    downcont:inc           currentOption
              changeArrow   14, 25
-
-    drow3:      changeArrow   16, 25
 
     up:      cmp           currentOption, 0
              jnz           upcont
-             mov           currentOption, 3
-             changeArrow   16, 25
+             mov           currentOption, 1
+             changeArrow   14, 25
 
     upcont:  dec           currentOption
-             cmp           currentOption, 0
-             jnz           urow1
-             changeArrow   10, 25
-
-    urow1:   cmp           currentOption, 1
-             jnz           urow2
              changeArrow   12, 25
-
-    urow2:   changeArrow   14, 25
-
-main endp
-end main
+ret
+quit endp
+end

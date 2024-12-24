@@ -1,12 +1,12 @@
-public game
+public single
 
-extrn Bricks:FAR 
-extrn DRAW_BALL:far
-extrn MOVE_BALL:far
-extrn Clear_BALL:far
-extrn moveBar:far
-extrn drawBar:far
-extrn dir:byte
+extrn sBricks:FAR 
+extrn sDRAW_BALL:far
+extrn sMOVE_BALL:far
+extrn sClear_BALL:far
+extrn smoveBar:far
+extrn sdrawBar:far
+extrn sdir:byte
 .model small
 
 .stack 100h
@@ -16,26 +16,12 @@ PREV_TIMESTEP db 0
 
 .code
 
-splitScreen proc
-    mov cx, 320
-    mov dx, 0
-drawPixel:
-    mov AH, 0Ch
-	mov al, 0Fh
-    mov bh, 0
-    int 10h
-    inc dx
-    cmp dx, 480
-	jl drawPixel
-ret
-splitScreen endp
-
-game proc far
+single proc far
     ; mov ax, @data
     ; mov ds, ax
     mov ax,12h
     int 10h
-    call Bricks
+    call sBricks
 CHECK_TIME:
 
 		mov ah, 2ch ; get the system time
@@ -46,38 +32,37 @@ CHECK_TIME:
 		MOV PREV_TIMESTEP, DL ; update the previous time step
 
 		; Clear the screen
-        call splitScreen
-		call Clear_BALL
-		call MOVE_BALL
-		call DRAW_BALL
+		call sClear_BALL
+		call sMOVE_BALL
+		call sDRAW_BALL
         
         
-        call drawBar
+        call sdrawBar
         mov ah,1
         int 16h
         jz next
         mov ah,0
         int 16h
         cmp ah, 4Bh
-        jz movebarleft
+        jz smovebarleft
         cmp ah, 4Dh
-        jz movebarright
+        jz smovebarright
 
         next:
         ;rest of code
             jmp CHECK_TIME
-        movebarright:
-            mov dir, 1
-            call moveBar
+        smovebarright:
+            mov sdir, 1
+            call smoveBar
             jmp CHECK_TIME
-        movebarleft:
-            mov dir, 0
-            call moveBar
+        smovebarleft:
+            mov sdir, 0
+            call smoveBar
             jmp CHECK_TIME
     ; mov ah, 4Ch
     ; int 21h
     ; call barDraw
     ret
 
-game endp
+single endp
 end
