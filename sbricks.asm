@@ -6,7 +6,7 @@ public sBricks
 
 .data
 
-	WINDOW_WIDTH equ 640  ; 640 pixels width of the window
+	WINDOW_WIDTH equ 256 ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
     MAX_HEIGHT equ 120
 	

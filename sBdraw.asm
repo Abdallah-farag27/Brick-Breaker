@@ -23,8 +23,8 @@ extrn sendRow:word
 	BALL_X dw 140h
 	BALL_Y dw 0F0h
 	BALL_SIZE dw 08h	; 4x4 pixels
-	BALL_VELOCITY_X dw 9h
-	BALL_VELOCITY_Y dw 6h
+	BALL_VELOCITY_X dw 8h
+	BALL_VELOCITY_Y dw 5h
 	BALL_ORIGINAL_X dw 140h
  	BALL_ORIGINAL_Y dw 0F0h
 
