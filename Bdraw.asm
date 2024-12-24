@@ -30,15 +30,15 @@ extrn rendRow:word
 	BALL_X dw 0A0h
 	BALL_Y dw 0F0h
 	BALL_SIZE dw 06h	; 4x4 pixels
-	BALL_VELOCITY_X dw 9h
+	BALL_VELOCITY_X dw 6h
 	BALL_VELOCITY_Y dw 6h
 	BALL_ORIGINAL_X dw 0A0h
  	BALL_ORIGINAL_Y dw 0F0h
 
-  BRICK_X_START dw ?
-  BRICK_Y_START dw ?
-  BRICK_X_END dw ?
-  BRICK_Y_END dw ?
+	BRICK_X_START dw ?
+	BRICK_Y_START dw ?
+	BRICK_X_END dw ?
+	BRICK_Y_END dw ?
 	BRICK_IX dw ?
 	BRICK_IY dw ?
 
@@ -51,15 +51,15 @@ extrn rendRow:word
 	rBALL_X dw 480
 	rBALL_Y dw 0F0h
 	rBALL_SIZE dw 06h	; 4x4 pixels
-	rBALL_VELOCITY_X dw -9h
-	rBALL_VELOCITY_Y dw -6h
+	rBALL_VELOCITY_X dw 6h
+	rBALL_VELOCITY_Y dw 6h
 	rBALL_ORIGINAL_X dw 480
  	rBALL_ORIGINAL_Y dw 0F0h
 
-  rBRICK_X_START dw ?
-  rBRICK_Y_START dw ?
-  rBRICK_X_END dw ?
-  rBRICK_Y_END dw ?
+	rBRICK_X_START dw ?
+	rBRICK_Y_START dw ?
+	rBRICK_X_END dw ?
+	rBRICK_Y_END dw ?
 	rBRICK_IX dw ?
 	rBRICK_IY dw ?
 .code
@@ -336,13 +336,13 @@ MULTIPLY_VELOCITY_X:
 	add ax,5
 	mov cx, 64
 	div cx
-	cmp dx,2
+	cmp dx,3
 	jz rMULTIPLY_VELOCITY_X
 	mov ax, rBALL_X
 	sub ax,5
 	mov cx, 64
 	div cx
-	cmp dx,2
+	cmp dx,3
 	jz rMULTIPLY_VELOCITY_X
 	
 
@@ -441,7 +441,7 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
 		mov ax, rWINDOW_HEIGHT
 		sub ax, rBALL_SIZE
     cmp rBALL_Y, ax						
-    jg rMULTIPLY_VELOCITY_Y_BY_NEG
+    jg rlpl
 	
     call CHECK_Brick_COL
     mov ax,rstartRow
@@ -458,7 +458,7 @@ MULTIPLY_VELOCITY_Y_BY_NEG:
     jge rdone
     jmp rMULTIPLY_VELOCITY_Y_BY_NEG
 
-; rlpl:call RESTART_BALL_POSITION
+rlpl:call RESTART_BALL_POSITION
 rdone:
     ret
 

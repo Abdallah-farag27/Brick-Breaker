@@ -33,8 +33,8 @@ public Barlr
 
 
     rcolor       db 3h
-    rstartColumn dw 120
-    rendColumn   dw 200
+    rstartColumn dw 440
+    rendColumn   dw 520
     rstartRow    dw 400 
     rendRow      dw 415 
     rwide        dw 80
@@ -220,33 +220,4 @@ moveBar PROC FAR
             jmp rdraw
 moveBar ENDP
 
-; barDraw proc far
-;     ; mov ah,0
-;     ; mov al,12h
-;     ; int 10h
-;     call drawBar
-;    check: mov ah,1
-;     int 16h
-;     jz next
-;     mov ah,0
-;     int 16h
-;     cmp ah, 4Bh
-;     jz movebarleft
-;     cmp ah, 4Dh
-;     jz movebarright
-
-;     next:
-;     ;rest of code
-;         jmp check
-;     movebarright:
-;         mov dir, 1
-;         call moveBar
-;         jmp check
-;     movebarleft:
-;         mov dir, 0
-;         call moveBar
-;         jmp check
-;     exit:
-;     ret
-; barDraw endp
 end
