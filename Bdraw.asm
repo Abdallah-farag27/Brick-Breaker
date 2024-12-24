@@ -28,7 +28,7 @@
     brickHeight dw 30
 
     colorBlack db 16
-    colorGray db 7
+    colorGray db 5h
 
     ; colorB db 0
     currColor db 7
@@ -37,7 +37,7 @@
     tmpWidth dw ?
     tmpHeight dw ?
 
-	color       db 7h
+	color       db 3h
     startColumn dw 240 
     endColumn   dw 400
     startRow    dw 400 
@@ -158,7 +158,7 @@ CHECK_Brick_COL proc far
 	mov bh,0
 	mov ah,0dh
 	int 10h
-	cmp al,7
+	cmp al,5h
 	jnz done1
 
 	mov ax,BAll_X
@@ -186,12 +186,45 @@ CHECK_Brick_COL proc far
 	add ax,30
 	mov BRICK_Y_END,ax
 	call eraseBrick
+	; mov ax,BRICK_X_END
+	; cmp ax, BALL_X
+	; jl MULTIPLY_VELOCITY_Y
+	; mov ax, BRICK_Y_END
+	; cmp ax, BALL_Y
+	; jl MULTIPLY_VELOCITY_Y
+	; mov ax, BRICK_Y_START
+	; jg MULTIPLY_VELOCITY_Y
+	; jmp MULTIPLY_VELOCITY_X
+
+	; jge MULTIPLY_VELOCITY_X
+
+	mov ax, BALL_X
+	add ax,8
+	mov cx, 128
+	div cx
+	cmp dx,0
+	jz MULTIPLY_VELOCITY_X
+	mov ax, BALL_X
+	sub ax,8
+	mov cx, 128
+	div cx
+	cmp dx,0
+	jz MULTIPLY_VELOCITY_X
+	
+
 MULTIPLY_VELOCITY_Y:
     NEG BALL_VELOCITY_Y
 		mov ax, BALL_VELOCITY_Y
 		add BALL_Y, ax
+		ret
+
+MULTIPLY_VELOCITY_X:
+    NEG BALL_VELOCITY_X
+		mov ax, BALL_VELOCITY_X
+		add BALL_X, ax
 	done1:
 		ret
+
 CHECK_Brick_COL endp
 
 MOVE_BALL proc near
@@ -392,7 +425,7 @@ moveBar PROC FAR
         mov dx, startRow
         jmp draw
     endMove:
-        mov color,7h
+        mov color,3h
         ret
     draw:
         mov al,color
