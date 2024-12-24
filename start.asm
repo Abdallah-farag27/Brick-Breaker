@@ -2,6 +2,29 @@ extrn single:FAR
 extrn conv:FAR
 extrn game:FAR
 
+initPort MACRO
+    ;Set Divisor Latch Access Bit
+    MOV DX, 3FBh 				; Line Control Register
+    MOV AL, 10000000b			;Set Divisor Latch Access Bit
+    OUT DX, AL					;Out it
+	
+    ;Set LSB byte of the Baud Rate Divisor Latch register.
+    MOV DX, 3F8h			
+    MOV AL, 0Ch			
+    OUT DX, AL
+
+    ;Set MSB byte of the Baud Rate Divisor Latch register.
+    MOV DX, 3F9h
+    MOV AL, 00h
+    OUT DX, AL
+
+    ;Set port configuration
+    MOV DX, 3FBh
+    MOV AL, 00011011b
+    OUT DX, AL
+ENDM
+
+
 moveCursor macro row,col
                mov ah,02h
                mov dh,row
@@ -61,6 +84,7 @@ ENDM
 .code
 
 main proc far
+        initPort
              mov           ax, @data
              mov           ds, ax
               mov ax,3h
@@ -79,8 +103,24 @@ main proc far
              moveCursor    16, 32
              DisplayString Exit
              changeArrow   10, 25
+            ;  jmp again
+    rec:
 
-    again:   mov           ah, 0               ; BIOS function to read key press
+            MOV DX, 3FDh		;line status register
+            in AL, DX			;take from the line register into AL
+            AND al, 1			;check if its not empty
+            JZ again	
+            MOV DX, 03F8h
+            in al, dx
+            cmp al, 's'
+            jnz again
+            call game
+    
+    again:               
+             mov ah,1
+             int 16h
+             jz rec
+             mov           ah, 0               ; BIOS function to read key press
              int           16h                 ; Call BIOS interrupt
 
              cmp           ah, 50h             ; Check if AH contains the scan code for the down arrow
@@ -102,6 +142,13 @@ main proc far
              ExitProgram
     p2:      cmp           currentOption,1
              jnz           p3
+             mov dx,3FDH 			;Line Status Register
+             in al , dx 				;Read Line Status
+             AND al , 00100000b
+             jz rec 
+             mov dx, 3F8H			;Transmit data register
+             mov al, 's'       	;put the data into al
+             out dx, al
              call game
              ExitProgram
     p3:      cmp           currentOption,2
@@ -115,32 +162,40 @@ dummy1:jmp up
              jnz           downcont
              mov           currentOption, 0
              changeArrow   10, 25
+            ;  jmp again
     downcont:inc           currentOption
              cmp           currentOption, 1
              jnz           drow2
              changeArrow   12, 25
+            ;  jmp again
 
     drow2:      cmp           currentOption, 2
              jnz           drow3
              changeArrow   14, 25
+            ;  jmp again
 
     drow3:      changeArrow   16, 25
+            ;  jmp again
 
     up:      cmp           currentOption, 0
              jnz           upcont
              mov           currentOption, 3
              changeArrow   16, 25
+            ;  jmp again
 
     upcont:  dec           currentOption
              cmp           currentOption, 0
              jnz           urow1
              changeArrow   10, 25
+            ;  jmp again
 
     urow1:   cmp           currentOption, 1
              jnz           urow2
              changeArrow   12, 25
+            ;  jmp again
 
     urow2:   changeArrow   14, 25
+            ;  jmp again
 
 main endp
 end main

@@ -17,6 +17,27 @@ extrn Brlr:byte
 extrn Bllr:byte
 extrn Barlr:byte
 
+initPort MACRO
+    ;Set Divisor Latch Access Bit
+    MOV DX, 3FBh 				; Line Control Register
+    MOV AL, 10000000b			;Set Divisor Latch Access Bit
+    OUT DX, AL					;Out it
+	
+    ;Set LSB byte of the Baud Rate Divisor Latch register.
+    MOV DX, 3F8h			
+    MOV AL, 0Ch			
+    OUT DX, AL
+
+    ;Set MSB byte of the Baud Rate Divisor Latch register.
+    MOV DX, 3F9h
+    MOV AL, 00h
+    OUT DX, AL
+
+    ;Set port configuration
+    MOV DX, 3FBh
+    MOV AL, 00011011b
+    OUT DX, AL
+ENDM
 
 .model small
 
@@ -42,16 +63,13 @@ ret
 splitScreen endp
 
 game proc far
-    ; mov ax, @data
-    ; mov ds, ax
+    initPort
     mov ax,12h
     int 10h
     mov Brlr,'1'
     call Bricks
     mov Brlr,'0'
     call Bricks
-    ; mov startColumn, 120
-    ; mov endColumn, 200
              
 CHECK_TIME:
 
@@ -74,11 +92,14 @@ CHECK_TIME:
 		call MOVE_BALL
 		call DRAW_BALL
         
+        mov Barlr,'0'
+        call drawBar
         mov Barlr,'1'
         call drawBar
+left:
         mov ah,1
         int 16h
-        jz next
+        jz right
         mov ah,0
         int 16h
         cmp ah, 4Bh
@@ -91,15 +112,48 @@ CHECK_TIME:
             jmp CHECK_TIME
         movebarright:
             mov dir, 1
+            mov Barlr,'1'
+            mov dx,3FDH 			;Line Status Register
+            in al , dx 				;Read Line Status
+            AND al , 00100000b
+            jz right 
+            mov dx, 3F8H			;Transmit data register
+            mov al, 'r'       	;put the data into al
+            out dx, al
             call moveBar
             jmp CHECK_TIME
         movebarleft:
             mov dir, 0
+            mov Barlr,'1'
+            mov dx,3FDH 			;Line Status Register
+            in al , dx 				;Read Line Status
+            AND al , 00100000b
+            jz right 
+            mov dx, 3F8H			;Transmit data register
+            mov al, 'l'       	;put the data into al
+            out dx, al
             call moveBar
             jmp CHECK_TIME
-    ; mov ah, 4Ch
-    ; int 21h
-    ; call barDraw
+right:
+    MOV DX, 3FDh		;line status register
+	in AL, DX			;take from the line register into AL
+	AND al, 1			;check if its not empty
+	JZ next	
+    MOV DX, 03F8h
+	in al, dx
+    cmp al, 'l'
+    jz rmovebarleft
+    rmovebarright:
+            mov rdir, 1
+            mov Barlr,'0'
+            call moveBar
+            jmp next
+    rmovebarleft:
+            mov rdir, 0
+            mov Barlr,'0'
+            call moveBar
+            jmp next	
+    jmp next
     ret
 
 game endp
