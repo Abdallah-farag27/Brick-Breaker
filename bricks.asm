@@ -1,34 +1,56 @@
 public Bricks
+; public WINDOW_WIDTH
+; public START_X
+; public currWidth
+public Brlr
 
 .model small
 
 .stack 100h
 
 .data
+    Brlr db '1'
+
+    brickWidth dw 64
+    brickHeight dw 15
+
+    colorBlack equ 16
+    colorGray equ 5
 
 	WINDOW_WIDTH equ 320  ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
     MAX_HEIGHT equ 60
     START_X equ 0
 	
-	currWidth Dw 0
+	currWidth dw 0
 	currHeight Dw 0
 
-    brickWidth dw 64
-    brickHeight dw 15
-
-    colorBlack db 16
-    colorGray db 5
-
-    color db 0
     currColor db 5
-    temp dw ?
+    ; temp dw ?
 
     tmpWidth dw ?
     tmpHeight dw ?
+
+    rWINDOW_WIDTH equ 640  ; 640 pixels width of the window
+	rWINDOW_HEIGHT equ 480 ; 480 pixels height of the window
+    rMAX_HEIGHT equ 60
+    rSTART_X equ 320
+	
+	rcurrWidth dw 320
+	rcurrHeight Dw 0
+
+    rcurrColor db 5
+    ; temp dw ?
+
+    rtmpWidth dw ?
+    rtmpHeight dw ?
+
+    
 .code
 
 IncWHC proc far
+    cmp Brlr,'1'
+    jnz right1
     mov ax ,brickWidth
     add currWidth ,ax
     
@@ -39,12 +61,27 @@ IncWHC proc far
     
     mov ax,brickHeight
     add currHeight,ax
+    ret
+
+    right1:
+     mov ax ,brickWidth
+    add rcurrWidth ,ax
+    
+    mov ax,rWINDOW_WIDTH
+    cmp ax,rcurrWidth 
+    jnz ENDPROC
+    mov rcurrWidth,rSTART_X
+    
+    mov ax,brickHeight
+    add rcurrHeight,ax
 
 ENDPROC:
     ret 
 IncWHC endp
 
 ChooseColor proc far
+cmp Brlr,'1'
+    jnz right2
     push cx
     mov bp ,tmpWidth
     mov cx ,tmpHeight
@@ -65,19 +102,48 @@ ChooseColor proc far
     jz changeToBlack
 
 changeToGray:
-    mov al,colorGray
-    mov currColor,al
+    mov currColor,colorGray
     pop cx
     ret
 changeToBlack:
-    mov al,colorBlack
-    mov currColor,al
+    mov currColor,colorBlack
     pop cx
-    ret 
+    ret
+
+
+    right2:
+    push cx
+    mov bp ,rtmpWidth
+    mov cx ,rtmpHeight
+
+    cmp bp,rcurrWidth
+    jz rchangeToBlack
+    cmp cx,rcurrHeight
+    jz rchangeToBlack
+
+    mov ax,rcurrWidth
+    add ax,brickWidth
+    cmp bp,ax
+    jz rchangeToBlack
+
+    mov ax,rcurrHeight
+    add ax,brickHeight
+    cmp cx,ax
+    jz rchangeToBlack
+
+rchangeToGray:
+    mov rcurrColor,colorGray
+    pop cx
+    ret
+rchangeToBlack:
+    mov rcurrColor,colorBlack
+    pop cx
+    ret  
 ChooseColor endp
 
 DrawBrick proc far
-    
+    cmp Brlr,'1'
+    jnz right3
     mov si, currWidth    
     mov di, currHeight
 
@@ -106,6 +172,36 @@ DrawRow:
     jnz DrawColoumn
 
     ret
+    right3:
+    mov si, rcurrWidth    
+    mov di, rcurrHeight
+
+rDrawColoumn:
+    mov bx, brickHeight      ; Rectangle width
+    mov dx, di      ; Start X coordinate
+
+rDrawRow:
+    ; INT 10h Function 0Ch - Write Pixel
+    mov rtmpHeight,dx
+    mov rtmpWidth,cx
+    call ChooseColor
+    mov cx,si
+    mov al,rcurrColor
+    mov ah, 0Ch     ; Write pixel to screen
+    int 10h         ; Draw pixel at (DX, SI)
+    
+    inc dx          ; Next pixel in row
+    dec bx 
+    jnz rDrawRow
+    
+    inc si          ; Move to next row
+    mov ax,brickWidth
+    add ax,rcurrWidth
+    cmp ax,si
+    jnz rDrawColoumn
+
+    ret
+
 DrawBrick endp
 
 Bricks proc far
@@ -116,6 +212,8 @@ Bricks proc far
 DrawBricks:
     call DrawBrick
     call IncWHC
+    cmp Brlr,'1'
+    jnz right4
     mov ax,MAX_HEIGHT
     cmp ax, currHeight
     jz ENDsss
@@ -124,6 +222,16 @@ DrawBricks:
 ENDsss:    
   
 ret
+right4:
+mov ax,rMAX_HEIGHT
+    cmp ax, rcurrHeight
+    jz rENDsss
+    jmp DrawBricks
+
+rENDsss:    
+  
+ret
+
 Bricks endp
 
 end
