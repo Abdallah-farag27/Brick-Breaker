@@ -20,9 +20,9 @@ filedata = filedata.replace("--path--", os.getcwd())
 
 files = [f for f in os.listdir() if os.path.isfile(f)]
 
-if "game.asm" in files:
-    files.remove("game.asm")
-    files.insert(0, "game.asm")
+if "start.asm" in files:
+    files.remove("start.asm")
+    files.insert(0, "start.asm")
 
 linkingstr = "link "
 
@@ -45,7 +45,7 @@ for file in files:
 
 filedata += linkingstr[:-1]
 filedata += ";"
-filedata += "\ngame.exe"
+filedata += "\nstart.exe"
 
 filedata1 = (
     filedata
@@ -69,8 +69,8 @@ with open("dosbox-x-generated1.conf", "w") as file:
 with open("dosbox-x-generated2.conf", "w") as file:
     file.write(filedata2)
 
-prog1 = ["E:\MicroAssembly\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generated1.conf"]
-prog2 = ["E:\MicroAssembly\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generated2.conf"]
+prog1 = ["C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generated1.conf"]
+prog2 = ["C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-generated2.conf"]
 
 subprocess.Popen(prog1)
 sleep(2)

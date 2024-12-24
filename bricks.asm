@@ -17,10 +17,10 @@ public Bricks
     brickHeight dw 30
 
     colorBlack db 16
-    colorGray db 7
+    colorGray db 5
 
     color db 0
-    currColor db 7
+    currColor db 5
     temp dw ?
 
     tmpWidth dw ?
