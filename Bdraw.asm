@@ -159,13 +159,13 @@ CHECK_Brick_COL proc far
 	mov BRICK_Y_END,ax
 	call eraseBrick
 	mov ax, BALL_X
-	add ax,6
+	add ax,3
 	mov cx, 64
 	div cx
 	cmp dx,0
 	jz MULTIPLY_VELOCITY_X
 	mov ax, BALL_X
-	sub ax,6
+	sub ax,3
 	mov cx, 64
 	div cx
 	cmp dx,0

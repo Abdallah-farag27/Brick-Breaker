@@ -9,6 +9,7 @@ public Bricks
 	WINDOW_WIDTH equ 320  ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
     MAX_HEIGHT equ 60
+    START_X equ 0
 	
 	currWidth Dw 0
 	currHeight Dw 0
@@ -34,7 +35,7 @@ IncWHC proc far
     mov ax,WINDOW_WIDTH
     cmp ax,currWidth 
     jnz ENDPROC
-    mov currWidth,0
+    mov currWidth,START_X
     
     mov ax,brickHeight
     add currHeight,ax
