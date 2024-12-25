@@ -2,6 +2,8 @@
 public sDRAW_BALL
 public sMOVE_BALL
 public sClear_BALL
+public ResetsBdraw
+public sLives
 
 extrn sstartColumn:word
 extrn sstartRow:word	
@@ -34,9 +36,18 @@ extrn sendRow:word
     BRICK_Y_END dw ?
 	BRICK_IX dw ?
 	BRICK_IY dw ?
-	PREV_TIMESTEP db 0 
+	sLives db 3
+	
 .code
 
+;description
+ResetsBdraw PROC
+	mov BALL_X , 140h
+	mov BALL_Y , 0F0h
+	mov sLives , 3
+	mov BALL_VELOCITY_X , 8h
+	mov BALL_VELOCITY_Y , 5h
+ResetsBdraw ENDP
 
 sDRAW_BALL proc near
 
@@ -72,7 +83,7 @@ RESTART_BALL_POSITION proc far
 
 	MOV AX,BALL_ORIGINAL_Y
 	MOV BALL_Y,AX
-
+	sub sLives,1
 	ret
 
 RESTART_BALL_POSITION endp

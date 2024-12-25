@@ -59,7 +59,7 @@ extrn rendRow:word
 	rBALL_VELOCITY_X dw 6h
 	rBALL_VELOCITY_Y dw 6h
 	rBALL_ORIGINAL_X dw 480
- 	rBALL_ORIGINAL_Y dw 0F0h
+ 	rBALL_ORIGINAL_Y dw 0F0h 
 
 	rBRICK_X_START dw ?
 	rBRICK_Y_START dw ?
