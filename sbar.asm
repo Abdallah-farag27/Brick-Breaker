@@ -5,6 +5,7 @@ public sstartColumn
 public sstartRow
 public sendColumn
 public sendRow
+public ResetsBar
 .model small
 .stack 100h
 .data
@@ -20,6 +21,11 @@ public sendRow
     tempVar2    dw ?
     sdir         db ?
 .code
+ResetsBar PROC
+    mov sstartColumn , 240
+    mov sendColumn   , 400
+    ret
+ResetsBar ENDP
 
 sdrawBar PROC FAR
     mov cx,sstartColumn 

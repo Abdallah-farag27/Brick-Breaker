@@ -1,3 +1,11 @@
+moveCursor macro row,col
+               mov ah,02h
+               mov dh,row
+               mov dl,col
+               mov bh,0
+               int 10h
+endm
+
 public single
 
 extrn sBricks:FAR 
@@ -6,15 +14,33 @@ extrn sMOVE_BALL:far
 extrn sClear_BALL:far
 extrn smoveBar:far
 extrn sdrawBar:far
+extrn quit:far
 extrn sdir:byte
+extrn sLives:byte
+extrn WorL:byte
 .model small
 
 .stack 100h
 .data
 
 PREV_TIMESTEP db 0
+message db 'Lives Remaining: $'
 
 .code
+DisplayLives proc
+    ; cmp Lives, 0
+    ; jnz quit222
+    moveCursor 28,35
+    mov ah, 09h
+    lea dx, message
+    int 21h
+    mov dl, sLives   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+quit222: 
+    ret
+DisplayLives endp
 
 single proc far
     ; mov ax, @data
@@ -24,7 +50,14 @@ single proc far
     call sBricks
 CHECK_TIME:
 
-		mov ah, 2ch ; get the system time
+        cmp sLives, 0  
+        jnz continue
+        mov WorL, '0'
+        call quit
+
+
+continue:		
+        mov ah, 2ch ; get the system time
 		int 21h ; CH = hour, CL = minute, DH = second, DL = 1/100 second
 
 		cmp dl, PREV_TIMESTEP
@@ -32,6 +65,7 @@ CHECK_TIME:
 		MOV PREV_TIMESTEP, DL ; update the previous time step
 
 		; Clear the screen
+        call DisplayLives
 		call sClear_BALL
 		call sMOVE_BALL
 		call sDRAW_BALL
