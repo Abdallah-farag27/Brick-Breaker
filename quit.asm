@@ -1,6 +1,9 @@
 Public quit
 Public WorL
-
+extrn MainLoop:far
+extrn ResetBDraw:FAR
+extrn ResetBrick:FAR
+extrn ResetBar:FAR
 moveCursor macro row,col
                mov ah,02h
                mov dh,row
@@ -101,11 +104,14 @@ quit proc far
              jmp           again               ; Loop back if no recognized key is pressed
 
     check:   
-             ClearScreen
-             cmp           currentOption,0
-             jnz           p2
-            ExitProgram;;;;;;;;;;;;;;;;;;;;;;;;
-      p2:        ExitProgram
+            ClearScreen
+            cmp           currentOption,0
+            jnz           p2
+            call ResetBDraw
+            call ResetBrick
+            call ResetBar
+            call MainLoop
+      p2:   ExitProgram
 
     dummy1:  jmp            up
     down:    cmp           currentOption, 1

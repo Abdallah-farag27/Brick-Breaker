@@ -4,6 +4,7 @@ public Clear_BALL
 public Bllr
 public Lives
 public rLives
+public ResetBDraw
 
 extrn startColumn:word
 extrn startRow:word
@@ -65,6 +66,21 @@ extrn rendRow:word
 	rBRICK_IY dw ?
 	rLives db 3
 .code
+
+;description
+ResetBDraw PROC
+	mov rBALL_X , 480
+	mov rBALL_Y , 0F0h
+	mov rLives , 3
+	mov BALL_X , 0A0h
+	mov BALL_Y , 0F0h
+	mov Lives , 3
+	mov BALL_VELOCITY_X , 6h
+	mov BALL_VELOCITY_Y , 6h
+	mov rBALL_VELOCITY_X , 6h
+	mov rBALL_VELOCITY_Y , 6h 
+	ret
+ResetBDraw ENDP
 
 DRAW_BALL proc near
 
