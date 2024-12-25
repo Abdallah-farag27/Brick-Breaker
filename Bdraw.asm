@@ -1,8 +1,9 @@
-
 public DRAW_BALL
 public MOVE_BALL
 public Clear_BALL
 public Bllr
+public Lives
+public rLives
 
 extrn startColumn:word
 extrn startRow:word
@@ -41,7 +42,7 @@ extrn rendRow:word
 	BRICK_Y_END dw ?
 	BRICK_IX dw ?
 	BRICK_IY dw ?
-
+	Lives db 3
 
 	rWINDOW_WIDTH equ 280h ; 320 pixels width of the window
 	rWINDOW_HEIGHT equ 1E0h ; 200 pixels height of the window
@@ -62,8 +63,8 @@ extrn rendRow:word
 	rBRICK_Y_END dw ?
 	rBRICK_IX dw ?
 	rBRICK_IY dw ?
+	rLives db 3
 .code
-
 
 DRAW_BALL proc near
 
@@ -126,7 +127,7 @@ RESTART_BALL_POSITION proc far
 
 	MOV AX,BALL_ORIGINAL_Y
 	MOV BALL_Y,AX
-
+	sub Lives,1
 	ret
 	right2:
 	MOV AX,rBALL_ORIGINAL_X
@@ -134,7 +135,7 @@ RESTART_BALL_POSITION proc far
 
 	MOV AX,rBALL_ORIGINAL_Y
 	MOV rBALL_Y,AX
-
+	sub rLives,1
 	ret
 
 RESTART_BALL_POSITION endp
@@ -384,7 +385,7 @@ MOVE_BALL proc far
     jl MULTIPLY_VELOCITY_Y_BY_NEG						; BALL_Y < 0 => ball collided with top wall
 		mov ax, WINDOW_HEIGHT
 		sub ax, BALL_SIZE
-    cmp BALL_Y, ax						
+    cmp BALL_Y, ax					
     jg lpl 
 	
     call CHECK_Brick_COL

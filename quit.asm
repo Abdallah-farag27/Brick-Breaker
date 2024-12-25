@@ -1,6 +1,5 @@
-
 Public quit
-extrn single:FAR
+Public WorL
 
 moveCursor macro row,col
                mov ah,02h
@@ -46,13 +45,12 @@ ENDM
 .model small
 .stack 100h
 .data
-    SorM db '1'
     WorL db '0'
     Win db'You Win!','$'
     Cong      db 'Congratulation','$'
     Lose db'You Lose!','$'
     GameOver      db 'Game Over','$'
-    TryAgain     db 'Try Again','$'
+    Back     db 'Back To Main Menu','$'
     Exit          db 'Exit The Game','$'
     arrow         db 10h,'$'
     deleteArrow   db ' ','$'
@@ -60,8 +58,8 @@ ENDM
 .code
 
 quit proc far
-            ;  mov           ax, @data
-            ;  mov           ds, ax
+             mov           ax, @data
+             mov           ds, ax
 
  mov ax,3h
     int 10h
@@ -73,17 +71,17 @@ quit proc far
              jnz  lbl1
              DisplayString Win
              jmp cont1
-    lbl1:  DisplayString Lose
-    cont1:    cmp WorL, '1'
+    lbl1:    DisplayString Lose
+    cont1:   cmp WorL, '1'
              jnz  lbl2
              moveCursor    8, 32
              DisplayString cong
              jmp cont2
     lbl2:
-            moveCursor    8, 34
+             moveCursor    8, 34
              DisplayString GameOver
-    cont2:         moveCursor    12, 34
-             DisplayString TryAgain
+    cont2:   moveCursor    12, 30
+             DisplayString Back
              moveCursor    14, 32
              DisplayString exit
              changeArrow   12, 25
@@ -106,14 +104,10 @@ quit proc far
              ClearScreen
              cmp           currentOption,0
              jnz           p2
-             cmp SorM, '1'
-             jnz multi
-             call single
-             multi:
-             call single
-
+            ExitProgram;;;;;;;;;;;;;;;;;;;;;;;;
       p2:        ExitProgram
-dummy1:  jmp            up
+
+    dummy1:  jmp            up
     down:    cmp           currentOption, 1
              jnz           downcont
              mov           currentOption, 0
@@ -128,6 +122,6 @@ dummy1:  jmp            up
 
     upcont:  dec           currentOption
              changeArrow   12, 25
-ret
+             ret
 quit endp
 end
