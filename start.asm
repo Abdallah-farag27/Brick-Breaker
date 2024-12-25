@@ -88,9 +88,6 @@ ENDM
 .code
 
 MainLoop proc far
-        ; call ResetBDraw
-        ; call ResetBrick
-        ; call ResetBar
         mov currentOption, 0
         ClearScreen
         moveCursor    6, 30
