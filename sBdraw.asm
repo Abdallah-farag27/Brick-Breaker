@@ -4,6 +4,7 @@ public sMOVE_BALL
 public sClear_BALL
 public ResetsBdraw
 public sLives
+public sScore
 
 extrn sstartColumn:word
 extrn sstartRow:word	
@@ -37,6 +38,7 @@ extrn sendRow:word
 	BRICK_IX dw ?
 	BRICK_IY dw ?
 	sLives db 3
+	sScore db 0
 	
 .code
 
@@ -47,6 +49,7 @@ ResetsBdraw PROC
 	mov sLives , 3
 	mov BALL_VELOCITY_X , 8h
 	mov BALL_VELOCITY_Y , 5h
+	mov sScore, 0
 ResetsBdraw ENDP
 
 sDRAW_BALL proc near
@@ -117,6 +120,7 @@ sClear_BALL proc near
 sClear_BALL endp
 
 eraseBrick PROC FAR
+	inc sScore
     mov cx,BRICK_X_START 
     mov dx,BRICK_Y_START  
     mov al,0 

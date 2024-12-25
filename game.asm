@@ -23,6 +23,8 @@ extrn Lives:byte
 extrn rLives:byte
 extrn quit:far
 extrn WorL:byte
+extrn Score:byte
+extrn rScore:byte
 
 .model small
 
@@ -31,6 +33,7 @@ extrn WorL:byte
 
 PREV_TIMESTEP db 0
 message db 'Lives Remaining: $'
+Scoremess db 'Score: $'
 .code
 
 splitScreen proc
@@ -70,6 +73,27 @@ quit222:
     ret
 DisplayLives endp
 
+
+DisplayScore proc
+    moveCursor 28,28
+    mov ah, 09h
+    lea dx, Scoremess
+    int 21h
+    mov dl, Score   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    moveCursor 28,70
+    mov ah, 09h
+    lea dx, Scoremess
+    int 21h
+    mov dl, rScore   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    ret
+DisplayScore endp
+
 game proc far
     mov ax,12h
     int 10h
@@ -92,6 +116,17 @@ CHECK_WIN:
         mov WorL, '1'
         call quit
 
+        cmp Score, 20
+        jnz CHECK_LOSE
+        mov WorL, '1'
+        call quit
+
+CHECK_LOSE:      
+        cmp rLives, 20
+        jnz Continue
+        mov WorL, '0'
+        call quit
+
 
 Continue:
 		mov ah, 2ch ; get the system time
@@ -103,6 +138,7 @@ Continue:
 
 		; Clear the screen
         call DisplayLives
+        call DisplayScore
         call splitScreen
         mov Bllr,'1'
 		call Clear_BALL
@@ -128,6 +164,17 @@ left:
         jz movebarleft
         cmp ah, 4Dh
         jz movebarright
+        cmp al, 27
+        jnz next
+        mov dx,3FDH 			
+            in al , dx 				
+            AND al , 00100000b
+            jz right 
+            mov dx, 3F8H		
+            mov al, 'e'   
+            out dx, al
+        mov ah, 4Ch
+        int 21h
 
         next:
             jmp CHECK_TIME
@@ -164,6 +211,10 @@ right:
 	in al, dx
     cmp al, 'l'
     jz rmovebarleft
+    cmp al, 'r'
+    jz rmovebarright
+    mov ah, 4Ch
+    int 21h
     rmovebarright:
             mov rdir, 1
             mov Barlr,'0'

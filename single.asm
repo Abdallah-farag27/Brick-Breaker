@@ -17,6 +17,7 @@ extrn sdrawBar:far
 extrn quit:far
 extrn sdir:byte
 extrn sLives:byte
+extrn sScore:byte
 extrn WorL:byte
 .model small
 
@@ -25,12 +26,12 @@ extrn WorL:byte
 
 PREV_TIMESTEP db 0
 message db 'Lives Remaining: $'
-
+Scoremess db 'Score: $'
 .code
 DisplayLives proc
     ; cmp Lives, 0
     ; jnz quit222
-    moveCursor 28,35
+    moveCursor 28,5
     mov ah, 09h
     lea dx, message
     int 21h
@@ -41,6 +42,19 @@ DisplayLives proc
 quit222: 
     ret
 DisplayLives endp
+;;;
+
+DisplayScore proc
+    moveCursor 28,65
+    mov ah, 09h
+    lea dx, Scoremess
+    int 21h
+    mov dl, sScore   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    ret
+DisplayScore endp
 
 single proc far
     ; mov ax, @data
@@ -55,6 +69,10 @@ CHECK_TIME:
         mov WorL, '0'
         call quit
 
+        cmp sScore, 20
+        jnz continue
+        mov WorL, '1'
+        call quit
 
 continue:		
         mov ah, 2ch ; get the system time
@@ -66,6 +84,7 @@ continue:
 
 		; Clear the screen
         call DisplayLives
+        call DisplayScore
 		call sClear_BALL
 		call sMOVE_BALL
 		call sDRAW_BALL
@@ -81,6 +100,10 @@ continue:
         jz smovebarleft
         cmp ah, 4Dh
         jz smovebarright
+        cmp al, 27
+        jnz next
+        mov ah, 4Ch
+        int 21h
 
         next:
         ;rest of code
