@@ -120,7 +120,7 @@ sClear_BALL proc near
 sClear_BALL endp
 
 eraseBrick PROC FAR
-	inc sScore
+	add sScore , 1
     mov cx,BRICK_X_START 
     mov dx,BRICK_Y_START  
     mov al,0 

@@ -112,17 +112,17 @@ CHECK_TIME:
 
 CHECK_WIN:      
         cmp rLives, 0
-        jnz Continue
+        jnz scmp
         mov WorL, '1'
         call quit
 
-        cmp Score, 20
+scmp:   cmp Score, 20
         jnz CHECK_LOSE
         mov WorL, '1'
         call quit
 
 CHECK_LOSE:      
-        cmp rLives, 20
+        cmp rScore, 20
         jnz Continue
         mov WorL, '0'
         call quit
