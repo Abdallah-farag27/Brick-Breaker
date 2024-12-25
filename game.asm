@@ -1,3 +1,10 @@
+moveCursor macro row,col
+               mov ah,02h
+               mov dh,row
+               mov dl,col
+               mov bh,0
+               int 10h
+endm
 public game
 
 extrn Bricks:FAR 
@@ -11,7 +18,10 @@ extrn rdir:byte
 extrn Brlr:byte
 extrn Bllr:byte
 extrn Barlr:byte
-
+extrn Lives:byte
+extrn rLives:byte
+extrn quit:far
+extrn WorL:byte
 
 .model small
 
@@ -19,7 +29,7 @@ extrn Barlr:byte
 .data
 
 PREV_TIMESTEP db 0
-
+message db 'Lives Remaining: $'
 .code
 
 splitScreen proc
@@ -36,6 +46,29 @@ drawPixel:
 ret
 splitScreen endp
 
+DisplayLives proc
+    ; cmp Lives, 0
+    ; jnz quit222
+    moveCursor 28,1
+    mov ah, 09h
+    lea dx, message
+    int 21h
+    mov dl, Lives   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    moveCursor 28,42
+    mov ah, 09h
+    lea dx, message
+    int 21h
+    mov dl, rLives   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+quit222: 
+    ret
+DisplayLives endp
+
 game proc far
     mov ax,12h
     int 10h
@@ -46,6 +79,19 @@ game proc far
              
 CHECK_TIME:
 
+        cmp Lives, 0
+        jnz CHECK_WIN
+        mov WorL, '0'
+        call quit
+
+CHECK_WIN:      
+        cmp rLives, 0
+        jnz Continue
+        mov WorL, '1'
+        call quit
+
+
+Continue:
 		mov ah, 2ch ; get the system time
 		int 21h ; CH = hour, CL = minute, DH = second, DL = 1/100 second
 
@@ -54,6 +100,7 @@ CHECK_TIME:
 		MOV PREV_TIMESTEP, DL ; update the previous time step
 
 		; Clear the screen
+        call DisplayLives
         call splitScreen
         mov Bllr,'1'
 		call Clear_BALL
