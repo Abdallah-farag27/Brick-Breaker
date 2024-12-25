@@ -14,6 +14,7 @@ public rendColumn
 public rendRow
 
 public Barlr
+public ResetBar
 
 .model small
 .stack 100h
@@ -44,6 +45,15 @@ public Barlr
     rtempVar2    dw ?
     rdir         db ?
 .code
+
+;description
+ResetBar PROC
+    mov startColumn , 120
+    mov endColumn   , 200
+    mov rstartColumn , 440
+    mov rendColumn   , 520
+    ret
+ResetBar ENDP
 
 drawBar PROC FAR
     cmp Barlr,'1'

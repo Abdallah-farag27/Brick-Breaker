@@ -13,6 +13,7 @@ extrn MOVE_BALL:far
 extrn Clear_BALL:far
 extrn moveBar:far
 extrn drawBar:far
+extrn ResetBrick:FAR
 extrn dir:byte
 extrn rdir:byte
 extrn Brlr:byte
@@ -72,6 +73,7 @@ DisplayLives endp
 game proc far
     mov ax,12h
     int 10h
+    ; call ResetBrick
     mov Brlr,'1'
     call Bricks
     mov Brlr,'0'

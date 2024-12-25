@@ -1,6 +1,10 @@
+Public MainLoop
 extrn single:FAR
 extrn conv:FAR
 extrn game:FAR
+extrn ResetBDraw:FAR
+extrn ResetBrick:FAR
+extrn ResetBar:FAR
 
 initPort MACRO
     ;Set Divisor Latch Access Bit
@@ -83,13 +87,11 @@ ENDM
     currentOption db 0
 .code
 
-main proc far
-        initPort
-        mov ax, @data
-        mov ds, ax
-        mov ax,3h
-        int 10h
-
+MainLoop proc far
+        ; call ResetBDraw
+        ; call ResetBrick
+        ; call ResetBar
+        mov currentOption, 0
         ClearScreen
         moveCursor    6, 30
         DisplayString GameName
@@ -195,6 +197,13 @@ dummy1:jmp up
              changeArrow   12, 25
 
     urow2:   changeArrow   14, 25
+    ret
+MainLoop endp
 
+main proc far
+    mov ax, @data
+    mov ds,ax
+    initPort
+    call MainLoop
 main endp
 end main

@@ -1,8 +1,10 @@
+
 public Bricks
 ; public WINDOW_WIDTH
 ; public START_X
 ; public currWidth
 public Brlr
+public ResetBrick
 
 .model small
 
@@ -47,6 +49,18 @@ public Brlr
 
     
 .code
+ResetBrick PROC
+    mov currWidth,0
+    mov currHeight,0
+    mov rcurrWidth,320
+    mov rcurrHeight,0
+
+    mov rcurrColor , 5
+    mov currColor , 5
+
+    mov Brlr ,'1'
+    ret
+ResetBrick ENDP
 
 IncWHC proc far
     cmp Brlr,'1'
