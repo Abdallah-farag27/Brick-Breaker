@@ -15,7 +15,7 @@ public rendRow
 
 public Barlr
 public ResetBar
-
+public RESIZEbar
 .model small
 .stack 100h
 .data
@@ -54,6 +54,29 @@ ResetBar PROC
     mov rendColumn   , 520
     ret
 ResetBar ENDP
+
+
+RESIZEbar proc
+    cmp Barlr,'1'
+    jnz fady
+    cmp startColumn,20
+    jl addend1
+    sub startColumn,20
+    jmp asdasd
+    addend1:
+    add endColumn,20
+    jmp asdasd
+
+    fady:
+    cmp rstartColumn,20
+    jl addend2
+    sub rstartColumn,20
+    jmp asdasd
+    addend2:
+    add rendColumn,20
+asdasd:
+
+RESIZEbar endp
 
 drawBar PROC FAR
     cmp Barlr,'1'

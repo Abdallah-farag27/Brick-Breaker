@@ -34,7 +34,6 @@ RESIZE proc
     sub sstartColumn,40
     addend:
     add sendColumn,40
-    
 RESIZE endp
 
 sdrawBar PROC FAR
