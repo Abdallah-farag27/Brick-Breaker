@@ -42,6 +42,7 @@ DisplayLives proc
 quit222: 
     ret
 DisplayLives endp
+;;;
 
 DisplayScore proc
     moveCursor 28,65
