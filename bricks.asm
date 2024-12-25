@@ -1,4 +1,3 @@
-
 public Bricks
 ; public WINDOW_WIDTH
 ; public START_X

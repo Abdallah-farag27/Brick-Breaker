@@ -1,5 +1,5 @@
 public sBricks
-
+public ResetsBrick
 .model small
 
 .stack 100h
@@ -19,13 +19,20 @@ public sBricks
     colorBlack db 16
     colorGray db 5
 
-    color db 0
     currColor db 5
     temp dw ?
 
     tmpWidth dw ?
     tmpHeight dw ?
 .code
+
+ResetsBrick PROC
+    mov currWidth,0
+    mov currHeight,0
+
+    mov currColor , 5
+    ret
+ResetsBrick ENDP
 
 IncWHC proc far
     mov ax ,brickWidth

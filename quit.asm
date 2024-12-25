@@ -4,6 +4,9 @@ extrn MainLoop:far
 extrn ResetBDraw:FAR
 extrn ResetBrick:FAR
 extrn ResetBar:FAR
+extrn ResetsBdraw:FAR
+extrn ResetsBrick:FAR
+extrn ResetsBar:FAR
 moveCursor macro row,col
                mov ah,02h
                mov dh,row
@@ -110,6 +113,9 @@ quit proc far
             call ResetBDraw
             call ResetBrick
             call ResetBar
+            call ResetsBdraw
+            call ResetsBrick
+            call ResetsBar
             call MainLoop
       p2:   ExitProgram
 
