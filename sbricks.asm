@@ -18,12 +18,14 @@ public ResetsBrick
 
     colorBlack db 16
     colorGray db 5
+    colorShift equ 0Eh
 
     currColor db 5
     temp dw ?
 
     tmpWidth dw ?
     tmpHeight dw ?
+    Brcounter db 0
 .code
 
 ResetsBrick PROC
@@ -31,10 +33,12 @@ ResetsBrick PROC
     mov currHeight,0
 
     mov currColor , 5
+    mov Brcounter ,0
     ret
 ResetsBrick ENDP
 
 IncWHC proc far
+    add Brcounter,1
     mov ax ,brickWidth
     add currWidth ,ax
     
@@ -95,7 +99,13 @@ DrawRow:
     ; INT 10h Function 0Ch - Write Pixel
     mov tmpHeight,dx
     mov tmpWidth,cx
+    cmp Brcounter,16
+    jz sscount
     call ChooseColor
+    jmp cqweq
+sscount:    
+    mov currColor,colorShift
+cqweq:
     mov cx,si
     mov al,currColor
     mov ah, 0Ch     ; Write pixel to screen

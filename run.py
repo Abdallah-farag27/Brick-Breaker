@@ -74,4 +74,4 @@ prog2 = ["C:\Program Files (x86)\DOSBox-0.74-3\DOSBox.exe", "-conf", "dosbox-x-g
 
 subprocess.Popen(prog1)
 sleep(3)
-subprocess.Popen(prog2)
+# subprocess.Popen(prog2)

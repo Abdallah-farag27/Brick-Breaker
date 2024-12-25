@@ -88,6 +88,8 @@ ENDM
 .code
 
 MainLoop proc far
+        mov ah,3
+        int 10h
         mov currentOption, 0
         ClearScreen
         moveCursor    6, 30
