@@ -8,6 +8,7 @@ public sScore1
 public sScore2
 public sTotScore
 
+extrn RESIZE:far
 extrn sstartColumn:word
 extrn sstartRow:word	
 extrn sendColumn:word
@@ -156,10 +157,15 @@ CHECK_Brick_COL proc far
 	mov bh,0
 	mov ah,0dh
 	int 10h
+	cmp al,0Eh
+	jnz col1
+	call RESIZE
+	jmp asd
+col1:
 	cmp al,5h
 	jnz done1
 
-
+asd:
 	mov ax,BAll_X
 	mov cl,128
 	div cl

@@ -6,6 +6,7 @@ public sstartRow
 public sendColumn
 public sendRow
 public ResetsBar
+public RESIZE
 .model small
 .stack 100h
 .data
@@ -26,6 +27,15 @@ ResetsBar PROC
     mov sendColumn   , 400
     ret
 ResetsBar ENDP
+
+RESIZE proc
+    cmp sstartColumn,40
+    jl addend
+    sub sstartColumn,40
+    addend:
+    add sendColumn,40
+    
+RESIZE endp
 
 sdrawBar PROC FAR
     mov cx,sstartColumn 
