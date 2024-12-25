@@ -65,11 +65,11 @@ single proc far
 CHECK_TIME:
 
         cmp sLives, 0  
-        jnz continue
+        jnz sComp
         mov WorL, '0'
         call quit
 
-        cmp sScore, 20
+ sComp: cmp sScore, 20
         jnz continue
         mov WorL, '1'
         call quit
