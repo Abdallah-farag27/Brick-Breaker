@@ -17,7 +17,9 @@ extrn sdrawBar:far
 extrn quit:far
 extrn sdir:byte
 extrn sLives:byte
-extrn sScore:byte
+extrn sScore1:byte
+extrn sScore2:byte
+extrn sTotScore:byte
 extrn WorL:byte
 .model small
 
@@ -35,7 +37,7 @@ DisplayLives proc
     mov ah, 09h
     lea dx, message
     int 21h
-    mov dl, sLives   
+    mov dl, sLives 
     add dl, 30h
     mov ah, 02h
     int 21h
@@ -49,7 +51,11 @@ DisplayScore proc
     mov ah, 09h
     lea dx, Scoremess
     int 21h
-    mov dl, sScore   
+    mov dl, sScore2   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    mov dl, sScore1   
     add dl, 30h
     mov ah, 02h
     int 21h
@@ -69,7 +75,7 @@ CHECK_TIME:
         mov WorL, '0'
         call quit
 
- sComp: cmp sScore, 20
+ sComp: cmp sTotScore, 20
         jnz continue
         mov WorL, '1'
         call quit
