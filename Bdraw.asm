@@ -5,6 +5,8 @@ public Bllr
 public Lives
 public rLives
 public ResetBDraw
+public Score
+public rScore
 
 extrn startColumn:word
 extrn startRow:word
@@ -44,6 +46,7 @@ extrn rendRow:word
 	BRICK_IX dw ?
 	BRICK_IY dw ?
 	Lives db 3
+	Score db 0
 
 	rWINDOW_WIDTH equ 280h ; 320 pixels width of the window
 	rWINDOW_HEIGHT equ 1E0h ; 200 pixels height of the window
@@ -65,6 +68,7 @@ extrn rendRow:word
 	rBRICK_IX dw ?
 	rBRICK_IY dw ?
 	rLives db 3
+	rScore db 0
 .code
 
 ;description
@@ -79,6 +83,8 @@ ResetBDraw PROC
 	mov BALL_VELOCITY_Y , 6h
 	mov rBALL_VELOCITY_X , 6h
 	mov rBALL_VELOCITY_Y , 6h 
+	mov Score, 0
+	mov rScore, 0
 	ret
 ResetBDraw ENDP
 
@@ -213,6 +219,7 @@ Clear_BALL endp
 eraseBrick PROC FAR
 	cmp Bllr, '1'
 	jnz right4
+	inc Score
     mov cx,BRICK_X_START 
     mov dx,BRICK_Y_START  
     mov al,0 
@@ -229,6 +236,7 @@ eraseBrick PROC FAR
         jnz drawVerticalB
     ret
 	right4:
+	inc rScore
 	mov cx,rBRICK_X_START 
 	mov dx,rBRICK_Y_START  
 	mov al,0 
