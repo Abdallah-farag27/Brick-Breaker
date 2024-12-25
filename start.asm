@@ -14,7 +14,7 @@ initPort MACRO
 	
     ;Set LSB byte of the Baud Rate Divisor Latch register.
     MOV DX, 3F8h			
-    MOV AL, 0Ch			
+    MOV AL, 0C0h			
     OUT DX, AL
 
     ;Set MSB byte of the Baud Rate Divisor Latch register.

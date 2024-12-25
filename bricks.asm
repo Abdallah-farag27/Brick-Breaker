@@ -17,7 +17,9 @@ public ResetBrick
 
     colorBlack equ 16
     colorGray equ 5
-
+    colorShift equ 0Eh
+    count db 0
+    rcount db 0
 	WINDOW_WIDTH equ 320  ; 640 pixels width of the window
 	WINDOW_HEIGHT equ 480 ; 480 pixels height of the window
     MAX_HEIGHT equ 60
@@ -25,7 +27,7 @@ public ResetBrick
 	
 	currWidth dw 0
 	currHeight Dw 0
-
+    
     currColor db 5
     ; temp dw ?
 
@@ -56,7 +58,8 @@ ResetBrick PROC
 
     mov rcurrColor , 5
     mov currColor , 5
-
+    mov count ,0
+    mov rcount ,0   
     mov Brlr ,'1'
     ret
 ResetBrick ENDP
@@ -66,7 +69,7 @@ IncWHC proc far
     jnz right1
     mov ax ,brickWidth
     add currWidth ,ax
-    
+    add count,1
     mov ax,WINDOW_WIDTH
     cmp ax,currWidth 
     jnz ENDPROC
@@ -79,7 +82,7 @@ IncWHC proc far
     right1:
      mov ax ,brickWidth
     add rcurrWidth ,ax
-    
+    add rcount,1
     mov ax,rWINDOW_WIDTH
     cmp ax,rcurrWidth 
     jnz ENDPROC
@@ -168,7 +171,13 @@ DrawRow:
     ; INT 10h Function 0Ch - Write Pixel
     mov tmpHeight,dx
     mov tmpWidth,cx
+    cmp count,16
+    jz gg
     call ChooseColor
+    jmp ghh
+    gg:
+    mov currColor,colorShift
+    ghh:
     mov cx,si
     mov al,currColor
     mov ah, 0Ch     ; Write pixel to screen
@@ -197,7 +206,13 @@ rDrawRow:
     ; INT 10h Function 0Ch - Write Pixel
     mov rtmpHeight,dx
     mov rtmpWidth,cx
+     cmp rcount,16
+    jz gg1
     call ChooseColor
+    jmp ghh1
+    gg1:
+    mov rcurrColor,colorShift
+    ghh1:
     mov cx,si
     mov al,rcurrColor
     mov ah, 0Ch     ; Write pixel to screen

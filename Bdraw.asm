@@ -21,8 +21,8 @@ extrn rstartColumn:word
 extrn rstartRow:word
 extrn rendColumn:word
 extrn rendRow:word
-
-
+extrn Barlr:byte
+extrn RESIZEbar:far
 .model small
 
 .stack 100h
@@ -49,7 +49,7 @@ extrn rendRow:word
 	BRICK_Y_END dw ?
 	BRICK_IX dw ?
 	BRICK_IY dw ?
-	Lives db 3
+	Lives db 9
 	Score1 db 0
 	Score2 db 0
 	TotScore db 0
@@ -73,7 +73,7 @@ extrn rendRow:word
 	rBRICK_Y_END dw ?
 	rBRICK_IX dw ?
 	rBRICK_IY dw ?
-	rLives db 3
+	rLives db 9
 	rScore1 db 0
 	rScore2 db 0
 	rTotScore db 0
@@ -83,10 +83,10 @@ extrn rendRow:word
 ResetBDraw PROC
 	mov rBALL_X , 480
 	mov rBALL_Y , 0F0h
-	mov rLives , 3
+	mov rLives , 9
 	mov BALL_X , 0A0h
 	mov BALL_Y , 0F0h
-	mov Lives , 3
+	mov Lives , 9
 	mov BALL_VELOCITY_X , 6h
 	mov BALL_VELOCITY_Y , 6h
 	mov rBALL_VELOCITY_X , 6h
@@ -286,10 +286,16 @@ CHECK_Brick_COL proc far
 	mov bh,0
 	mov ah,0dh
 	int 10h
+	cmp al,0Eh
+	jnz col12
+	mov Barlr,'1'
+	call RESIZEbar
+	jmp asd1
+col12:
 	cmp al,5h
 	jnz done1
 
-
+asd1:
 	mov ax,BAll_X
 	mov cl,64
 	div cl
@@ -353,10 +359,16 @@ MULTIPLY_VELOCITY_X:
 	mov bh,0
 	mov ah,0dh
 	int 10h
+	cmp al,0Eh
+	jnz col123
+	mov Barlr,'0'
+	call RESIZEbar
+	jmp asd12
+col123:
 	cmp al,5h
 	jnz rdone1
 
-
+asd12:
 	mov ax,rBAll_X
 	mov cl,64
 	div cl
