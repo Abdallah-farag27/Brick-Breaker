@@ -1,5 +1,8 @@
 public conv
-
+extrn ResetBDraw:far
+extrn ResetBrick:far
+extrn ResetBar:far
+extrn MainLoop:far
 .MODEL SMALL
 .STACK 64
 .DATA
@@ -204,8 +207,10 @@ start proc
                      jmp         progloop
 
     dummy:           
-                     jmp         exit
-
+                    ; call ResetBar
+                    ; call ResetBrick
+                    ; call ResetBDraw
+                    call MainLoop
     dummy3:          
                      jmp         send
 

@@ -23,8 +23,12 @@ extrn Lives:byte
 extrn rLives:byte
 extrn quit:far
 extrn WorL:byte
-extrn Score:byte
-extrn rScore:byte
+extrn Score1:byte
+extrn rScore1:byte
+extrn Score2:byte
+extrn rScore2:byte
+extrn TotScore:byte
+extrn rTotScore:byte
 
 .model small
 
@@ -79,7 +83,11 @@ DisplayScore proc
     mov ah, 09h
     lea dx, Scoremess
     int 21h
-    mov dl, Score   
+    mov dl, Score2   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    mov dl, Score1   
     add dl, 30h
     mov ah, 02h
     int 21h
@@ -87,7 +95,11 @@ DisplayScore proc
     mov ah, 09h
     lea dx, Scoremess
     int 21h
-    mov dl, rScore   
+    mov dl, rScore2   
+    add dl, 30h
+    mov ah, 02h
+    int 21h
+    mov dl, rScore1   
     add dl, 30h
     mov ah, 02h
     int 21h
@@ -116,13 +128,13 @@ CHECK_WIN:
         mov WorL, '1'
         call quit
 
-scmp:   cmp Score, 20
+scmp:   cmp TotScore, 20
         jnz CHECK_LOSE
         mov WorL, '1'
         call quit
 
 CHECK_LOSE:      
-        cmp rScore, 20
+        cmp rTotScore, 20
         jnz Continue
         mov WorL, '0'
         call quit
